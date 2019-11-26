@@ -19,15 +19,8 @@ type viewWriter interface {
 
 type HTMLView interface {
 	Body() View
-	// build() *html.Node
 	apply(node *html.Node)
 }
-
-// type HTMLAttrView interface {
-// 	Body() View
-// 	apply(node *html.Node)
-// 	changesParent() bool
-// }
 
 func buildHTMLNode(view HTMLView) *html.Node {
 	node := &html.Node{}
@@ -67,13 +60,6 @@ func (text HTMLText) apply(node *html.Node) {
 	node.Data = text.Text
 }
 
-// func (text HTMLText) build() *html.Node {
-// 	return &html.Node{
-// 		Type: html.TextNode,
-// 		Data: text.Text,
-// 	}
-// }
-
 // ClassNames is a slice of class names
 type ClassNames []string
 
@@ -94,31 +80,6 @@ type H struct {
 
 func (_ H) Body() View {
 	return nil
-}
-
-func (h H) build() *html.Node {
-	var el *html.Node
-
-	switch h.Level {
-	case 1:
-		el = &html.Node{Type: html.ElementNode, Data: "h1", DataAtom: atom.H1}
-	case 2:
-		el = &html.Node{Type: html.ElementNode, Data: "h2", DataAtom: atom.H2}
-	case 3:
-		el = &html.Node{Type: html.ElementNode, Data: "h3", DataAtom: atom.H3}
-	case 4:
-		el = &html.Node{Type: html.ElementNode, Data: "h4", DataAtom: atom.H4}
-	case 5:
-		el = &html.Node{Type: html.ElementNode, Data: "h5", DataAtom: atom.H5}
-	case 6:
-		el = &html.Node{Type: html.ElementNode, Data: "h6", DataAtom: atom.H6}
-	default:
-		panic(fmt.Sprintf("Unsupported heading level %v", h.Level))
-	}
-
-	el.AppendChild(buildHTMLNode(h.Child))
-
-	return el
 }
 
 func (h H) apply(node *html.Node) {
@@ -172,24 +133,6 @@ func (button ButtonView) Submit() ButtonView {
 	return button
 }
 
-// func (button ButtonView) build() *html.Node {
-// 	buttonType := button.buttonType
-// 	if buttonType == "" {
-// 		buttonType = "button"
-// 	}
-
-// 	el := &html.Node{
-// 		Type:     html.ElementNode,
-// 		Data:     "button",
-// 		DataAtom: atom.Button,
-// 		Attr:     []html.Attribute{{Key: "type", Val: buttonType}},
-// 	}
-
-// 	el.AppendChild(buildHTMLNode(button.Child))
-
-// 	return el
-// }
-
 func (button ButtonView) apply(node *html.Node) {
 	buttonType := button.buttonType
 	if buttonType == "" {
@@ -208,10 +151,7 @@ func (button ButtonView) apply(node *html.Node) {
 type HTMLElementView struct {
 	base       html.Node
 	children   []HTMLView
-	classNames ClassNames // []string
-	// modifyBuild func(*html.Node)
-	// ClassNames
-	// *ClassNames
+	classNames ClassNames
 }
 
 func (_ HTMLElementView) Body() View { return nil }
@@ -231,27 +171,6 @@ func (basic HTMLElementView) ChangeClasses(changer func(classNames ClassNames) C
 	basic.classNames = changer(basic.classNames)
 	return basic
 }
-
-// func (basic HTMLElementView) build() *html.Node {
-// 	node := html.Node(basic.base)
-
-// 	for _, child := range basic.children {
-// 		switch child := child.(type) {
-// 		case HTMLView:
-// 		// IF HTMLAttrsView
-// 		node.AppendChild(child.build())
-// 	}
-
-// 	if len(basic.classNames) > 0 {
-// 		node.Attr = append(node.Attr, html.Attribute{Key: "class", Val: basic.classNames.String()})
-// 	}
-
-// 	// if basic.modifyBuild != nil {
-// 	// 	basic.modifyBuild(&node)
-// 	// }
-
-// 	return &node
-// }
 
 func (basic HTMLElementView) apply(node *html.Node) {
 	node.Type = html.ElementNode
