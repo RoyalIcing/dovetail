@@ -28,48 +28,48 @@ func TestRender(t *testing.T) {
 	// 	})
 	// })
 
-	t.Run("Rendering H{1}", func(t *testing.T) {
-		s := subjectAsString(H{1, Text("Hello")})
+	t.Run("Rendering H1", func(t *testing.T) {
+		s := subjectAsString(H(1, Text("Hello")))
 
 		t.Run(`it renders <h1> with text Hello`, func(t *testing.T) {
 			assert.Equal(t, s, `<h1>Hello</h1>`)
 		})
 	})
 
-	t.Run("Rendering H{2}", func(t *testing.T) {
-		s := subjectAsString(H{2, Text("Hello")})
+	t.Run("Rendering H2", func(t *testing.T) {
+		s := subjectAsString(H(2, Text("Hello")))
 
 		t.Run(`it renders <h2> with text Hello`, func(t *testing.T) {
 			assert.Equal(t, s, `<h2>Hello</h2>`)
 		})
 	})
 
-	t.Run("Rendering H{3}", func(t *testing.T) {
-		s := subjectAsString(H{3, Text("Hello")})
+	t.Run("Rendering H3", func(t *testing.T) {
+		s := subjectAsString(H(3, Text("Hello")))
 
 		t.Run(`it renders <h3> with text Hello`, func(t *testing.T) {
 			assert.Equal(t, s, `<h3>Hello</h3>`)
 		})
 	})
 
-	t.Run("Rendering H{4}", func(t *testing.T) {
-		s := subjectAsString(H{4, Text("Hello")})
+	t.Run("Rendering H4", func(t *testing.T) {
+		s := subjectAsString(H(4, Text("Hello")))
 
 		t.Run(`it renders <h4> with text Hello`, func(t *testing.T) {
 			assert.Equal(t, s, `<h4>Hello</h4>`)
 		})
 	})
 
-	t.Run("Rendering H{5}", func(t *testing.T) {
-		s := subjectAsString(H{5, Text("Hello")})
+	t.Run("Rendering H5", func(t *testing.T) {
+		s := subjectAsString(H(5, Text("Hello")))
 
 		t.Run(`it renders <h5> with text Hello`, func(t *testing.T) {
 			assert.Equal(t, s, `<h5>Hello</h5>`)
 		})
 	})
 
-	t.Run("Rendering H{6}", func(t *testing.T) {
-		s := subjectAsString(H{6, Text("Hello")})
+	t.Run("Rendering H6", func(t *testing.T) {
+		s := subjectAsString(H(6, Text("Hello")))
 
 		t.Run(`it renders <h6> with text Hello`, func(t *testing.T) {
 			assert.Equal(t, s, `<h6>Hello</h6>`)
@@ -120,7 +120,7 @@ func TestRender(t *testing.T) {
 type CustomView struct{}
 
 func (v CustomView) Body() View {
-	return H{5, Text("Hello")}
+	return H(5, Text("Hello"))
 }
 
 type CustomViewNested struct{}
@@ -198,6 +198,16 @@ func TestViewDataAttributes(t *testing.T) {
 	})
 }
 
+func TestViewClassNameView(t *testing.T) {
+	t.Run("Adding two classes", func(t *testing.T) {
+		s := subjectAsString(Div(ClassName("first"), ClassName("second")))
+
+		t.Run(`it renders <div> with class "first"`, func(t *testing.T) {
+			assert.Equal(t, s, `<div class="first second"></div>`)
+		})
+	})
+}
+
 func TestViewNilChild(t *testing.T) {
 	t.Run("Div with text and nil child", func(t *testing.T) {
 		s := subjectAsString(Div(Text("first"), nil, Text("second")))
@@ -264,6 +274,50 @@ func BenchmarkDiv(b *testing.B) {
 	result = buf
 }
 
+func BenchmarkDivWithClasses1(b *testing.B) {
+	buf := new(bytes.Buffer)
+
+	for n := 0; n < b.N; n++ {
+		buf.Reset()
+		Render(buf, Div().Class("first"))
+	}
+
+	result = buf
+}
+
+func BenchmarkDivWithClasses2Together(b *testing.B) {
+	buf := new(bytes.Buffer)
+
+	for n := 0; n < b.N; n++ {
+		buf.Reset()
+		Render(buf, Div().Class("first", "second"))
+	}
+
+	result = buf
+}
+
+func BenchmarkDivWithClasses2(b *testing.B) {
+	buf := new(bytes.Buffer)
+
+	for n := 0; n < b.N; n++ {
+		buf.Reset()
+		Render(buf, Div().Class("first").Class("second"))
+	}
+
+	result = buf
+}
+
+func BenchmarkDivWithChildClassNames(b *testing.B) {
+	buf := new(bytes.Buffer)
+
+	for n := 0; n < b.N; n++ {
+		buf.Reset()
+		Render(buf, Div(ClassName("first"), ClassName("second")))
+	}
+
+	result = buf
+}
+
 func BenchmarkButton(b *testing.B) {
 	buf := new(bytes.Buffer)
 
@@ -286,43 +340,65 @@ func BenchmarkButtonSubmit(b *testing.B) {
 	result = buf
 }
 
-func BenchmarkH(b *testing.B) {
-	buf := new(bytes.Buffer)
-
-	for n := 0; n < b.N; n++ {
-		buf.Reset()
-		Render(buf, H{1, Text("Click me")})
-	}
-
-	result = buf
-}
-
-func BenchmarkPremadeH(b *testing.B) {
-	buf := new(bytes.Buffer)
-	view := H{1, Text("Click me")}
-
-	for n := 0; n < b.N; n++ {
-		buf.Reset()
-		Render(buf, view)
-	}
-
-	result = buf
-}
-
-// func BenchmarkH1(b *testing.B) {
+// func BenchmarkH(b *testing.B) {
 // 	buf := new(bytes.Buffer)
 
 // 	for n := 0; n < b.N; n++ {
 // 		buf.Reset()
-// 		Render(buf, H1(Text("Click me")))
+// 		Render(buf, H{1, Text("Click me")})
 // 	}
 
 // 	result = buf
 // }
 
-// func BenchmarkPremadeH1(b *testing.B) {
+// func BenchmarkPremadeH(b *testing.B) {
 // 	buf := new(bytes.Buffer)
-// 	view := H1(Text("Click me"))
+// 	view := H{1, Text("Click me")}
+
+// 	for n := 0; n < b.N; n++ {
+// 		buf.Reset()
+// 		Render(buf, view)
+// 	}
+
+// 	result = buf
+// }
+
+// func BenchmarkHB(b *testing.B) {
+// 	buf := new(bytes.Buffer)
+
+// 	for n := 0; n < b.N; n++ {
+// 		buf.Reset()
+// 		Render(buf, HB{1, Text("Click me")})
+// 	}
+
+// 	result = buf
+// }
+
+// func BenchmarkHeading(b *testing.B) {
+// 	buf := new(bytes.Buffer)
+
+// 	for n := 0; n < b.N; n++ {
+// 		buf.Reset()
+// 		Render(buf, Heading(1, Text("Click me")))
+// 	}
+
+// 	result = buf
+// }
+
+func BenchmarkH1(b *testing.B) {
+	buf := new(bytes.Buffer)
+
+	for n := 0; n < b.N; n++ {
+		buf.Reset()
+		Render(buf, H(1, Text("Click me")))
+	}
+
+	result = buf
+}
+
+// func BenchmarkPremadeHB(b *testing.B) {
+// 	buf := new(bytes.Buffer)
+// 	view := HB{1, Text("Click me")}
 
 // 	for n := 0; n < b.N; n++ {
 // 		buf.Reset()
