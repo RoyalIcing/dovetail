@@ -1,5 +1,7 @@
 # Dovetail
 
+*CURRENTLY IN ALPHA, API WILL CHANGE*
+
 Friendly HTML Components for Go, inspired by SwiftUI, Elm, React.
 
 - Produce ARIA-compliant HTML markup easily.
