@@ -9,6 +9,7 @@ import (
 	"golang.org/x/net/html/atom"
 )
 
+// HTMLView applies changes to an html.Node, such as making it into an element or text node, or adding attributes
 type HTMLView interface {
 	apply(node *html.Node)
 }
@@ -44,6 +45,7 @@ func (text HTMLText) apply(node *html.Node) {
 // ClassNames is a slice of class names
 type ClassNames []string
 
+// Class adds the passed class names
 func (classNames ClassNames) Class(additions ...string) ClassNames {
 	return append(classNames, additions...)
 }
@@ -59,6 +61,7 @@ type Heading struct {
 	Child HTMLView
 }
 
+// H can be used to create <h1>, <h2>, etc. The first argument is the number
 func H(level int, child HTMLView) HTMLView {
 	return Heading{Level: level, Child: child}
 }
