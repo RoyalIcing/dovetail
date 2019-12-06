@@ -169,9 +169,12 @@ func (button ButtonView) apply(node *html.Node) {
 	button.elementCore.applyToNode(node)
 }
 
+//
+
 // HTMLElementView can be adapted to many types of HTML elements
 type HTMLElementView struct {
-	base        html.Node
+	tagName     string
+	tagAtom     atom.Atom
 	elementCore HTMLElementCore
 }
 
@@ -192,20 +195,16 @@ func (basic HTMLElementView) ChangeClasses(changer func(classNames ClassNames) C
 
 func (basic HTMLElementView) apply(node *html.Node) {
 	node.Type = html.ElementNode
-	node.Data = basic.base.Data
-	node.DataAtom = basic.base.DataAtom
-	node.Attr = basic.base.Attr
+	node.Data = basic.tagName
+	node.DataAtom = basic.tagAtom
 
 	basic.elementCore.applyToNode(node)
 }
 
 func HTMLElementViewOf(tagName string, tagAtom atom.Atom, children []HTMLView) HTMLElementView {
 	return HTMLElementView{
-		base: html.Node{
-			Type:     html.ElementNode,
-			Data:     tagName,
-			DataAtom: tagAtom,
-		},
+		tagName:     tagName,
+		tagAtom:     tagAtom,
 		elementCore: HTMLElementCore{children: children},
 	}
 }
@@ -240,11 +239,8 @@ func Div(children ...HTMLView) HTMLElementView {
 
 func DivWithClasses(classNames ClassNames, children ...HTMLView) HTMLElementView {
 	return HTMLElementView{
-		base: html.Node{
-			Type:     html.ElementNode,
-			Data:     "div",
-			DataAtom: atom.Div,
-		},
+		tagName: "div",
+		tagAtom: atom.Div,
 		elementCore: HTMLElementCore{
 			children:   children,
 			classNames: classNames,
@@ -262,11 +258,8 @@ func Li(children ...HTMLView) HTMLElementView {
 
 func List(children ...HTMLView) HTMLElementView {
 	return HTMLElementView{
-		base: html.Node{
-			Type:     html.ElementNode,
-			Data:     "ul",
-			DataAtom: atom.Ul,
-		},
+		tagName: "ul",
+		tagAtom: atom.Ul,
 		elementCore: HTMLElementCore{
 			children: children,
 			childTransformer: func(node *html.Node) *html.Node {
