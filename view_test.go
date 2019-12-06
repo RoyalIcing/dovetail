@@ -8,12 +8,35 @@ import (
 )
 
 func TestRender(t *testing.T) {
+	t.Run("Rendering Example in Readme", func(t *testing.T) {
+		s := subjectAsString(Div(
+			Header(
+				Nav(
+					AriaLabel("Primary"),
+					List(
+						Link("/", Text("Home")),
+						Link("/about", Text("About")),
+						Link("/pricing", Text("Pricing")),
+						Link("/sign-in", Text("Sign In")),
+						Link("/join", Text("Join")),
+					),
+				),
+			),
+			Main(
+				Article(
+					H(1, Text("Welcome")),
+					Div(Text("markdown")),
+				),
+			),
+		))
+
+		t.Run(`it renders`, func(t *testing.T) {
+			assert.Equal(t, s, `<div><header><nav aria-label="Primary"><ul><li><a href="/">Home</a></li><li><a href="/about">About</a></li><li><a href="/pricing">Pricing</a></li><li><a href="/sign-in">Sign In</a></li><li><a href="/join">Join</a></li></ul></nav></header><main><article><h1>Welcome</h1><div>markdown</div></article></main></div>`)
+		})
+	})
+
 	t.Run("Rendering Link", func(t *testing.T) {
 		s := subjectAsString(Link("https://example.org/", Text("Hello")))
-		// s := subjectAsString(Link("https://example.org/")(Text("Hello")))
-		// s := subjectAsString(Link(Text("Hello"))("https://example.org/"))
-		// s := subjectAsString(Text("Hello").AsLink("https://example.org/"))
-		// s := subjectAsString(Link(Text("Hello")).ToURL("https://example.org/"))
 
 		t.Run(`it renders <a> with href and child text`, func(t *testing.T) {
 			assert.Equal(t, s, `<a href="https://example.org/">Hello</a>`)
@@ -27,6 +50,40 @@ func TestRender(t *testing.T) {
 	// 		assert.Equal(t, s, `<a href="https://example.org/">Hello</a>`)
 	// 	})
 	// })
+
+	t.Run("Rendering Nav with items and aria label Primary", func(t *testing.T) {
+		s := subjectAsString(Nav(AriaLabel("Primary"), Ul(Li(Link("/about", Text("About"))))))
+
+		t.Run(`it renders <nav> with aria-label and one link in a list`, func(t *testing.T) {
+			assert.Equal(t, s, `<nav aria-label="Primary"><ul><li><a href="/about">About</a></li></ul></nav>`)
+		})
+	})
+
+	t.Run("Rendering Ul with Li then Link and Button children", func(t *testing.T) {
+		s := subjectAsString(
+			Ul(
+				Li(Link("/about", Text("About"))),
+				Li(Button(Text("Sign Out"))),
+			),
+		)
+
+		t.Run(`it renders <ul> with 2 <li> with <a> and <button> inside`, func(t *testing.T) {
+			assert.Equal(t, s, `<ul><li><a href="/about">About</a></li><li><button type="button">Sign Out</button></li></ul>`)
+		})
+	})
+
+	t.Run("Rendering List with Link and Button children", func(t *testing.T) {
+		s := subjectAsString(
+			List(
+				Link("/about", Text("About")),
+				Button(Text("Sign Out")),
+			),
+		)
+
+		t.Run(`it renders <ul> with 2 <li> with <a> and <button> inside`, func(t *testing.T) {
+			assert.Equal(t, s, `<ul><li><a href="/about">About</a></li><li><button type="button">Sign Out</button></li></ul>`)
+		})
+	})
 
 	t.Run("Rendering H1", func(t *testing.T) {
 		s := subjectAsString(H(1, Text("Hello")))

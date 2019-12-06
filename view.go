@@ -190,9 +190,10 @@ func (button ButtonView) apply(node *html.Node) {
 
 // HTMLElementView can be adapted to many types of HTML elements
 type HTMLElementView struct {
-	base       html.Node
-	children   []View
-	classNames ClassNames
+	base             html.Node
+	children         []View
+	classNames       ClassNames
+	childTransformer func(node *html.Node) *html.Node
 }
 
 func (_ HTMLElementView) Body() View { return nil }
@@ -229,6 +230,9 @@ func (basic HTMLElementView) apply(node *html.Node) {
 		case HTMLView:
 			childNode := &html.Node{}
 			child.apply(childNode)
+			if basic.childTransformer != nil {
+				childNode = basic.childTransformer(childNode)
+			}
 			node.AppendChild(childNode)
 		}
 	}
@@ -238,26 +242,43 @@ func (basic HTMLElementView) apply(node *html.Node) {
 	}
 }
 
-func Header(children ...View) HTMLView {
+func HTMLElementViewOf(tagName string, tagAtom atom.Atom, children []View) HTMLElementView {
 	return HTMLElementView{
 		base: html.Node{
 			Type:     html.ElementNode,
-			Data:     "header",
-			DataAtom: atom.Header,
+			Data:     tagName,
+			DataAtom: tagAtom,
 		},
 		children: children,
 	}
 }
 
+func Main(children ...View) HTMLElementView {
+	return HTMLElementViewOf("main", atom.Main, children)
+}
+
+func Header(children ...View) HTMLElementView {
+	return HTMLElementViewOf("header", atom.Header, children)
+}
+
+func Footer(children ...View) HTMLElementView {
+	return HTMLElementViewOf("footer", atom.Footer, children)
+}
+
+func Section(children ...View) HTMLElementView {
+	return HTMLElementViewOf("section", atom.Section, children)
+}
+
+func Article(children ...View) HTMLElementView {
+	return HTMLElementViewOf("article", atom.Article, children)
+}
+
+func Aside(children ...View) HTMLElementView {
+	return HTMLElementViewOf("aside", atom.Aside, children)
+}
+
 func Div(children ...View) HTMLElementView {
-	return HTMLElementView{
-		base: html.Node{
-			Type:     html.ElementNode,
-			Data:     "div",
-			DataAtom: atom.Div,
-		},
-		children: children,
-	}
+	return HTMLElementViewOf("div", atom.Div, children)
 }
 
 func DivWithClasses(classNames ClassNames, children ...View) HTMLElementView {
@@ -269,6 +290,48 @@ func DivWithClasses(classNames ClassNames, children ...View) HTMLElementView {
 		},
 		children:   children,
 		classNames: classNames,
+	}
+}
+
+func Ul(children ...View) HTMLElementView {
+	return HTMLElementView{
+		base: html.Node{
+			Type:     html.ElementNode,
+			Data:     "ul",
+			DataAtom: atom.Ul,
+		},
+		children: children,
+	}
+}
+
+func Li(children ...View) HTMLElementView {
+	return HTMLElementView{
+		base: html.Node{
+			Type:     html.ElementNode,
+			Data:     "li",
+			DataAtom: atom.Li,
+		},
+		children: children,
+	}
+}
+
+func List(children ...View) HTMLElementView {
+	return HTMLElementView{
+		base: html.Node{
+			Type:     html.ElementNode,
+			Data:     "ul",
+			DataAtom: atom.Ul,
+		},
+		children: children,
+		childTransformer: func(node *html.Node) *html.Node {
+			li := &html.Node{
+				Type:     html.ElementNode,
+				Data:     "li",
+				DataAtom: atom.Li,
+			}
+			li.AppendChild(node)
+			return li
+		},
 	}
 }
 
@@ -317,6 +380,11 @@ func AriaAttr(key string, value string) HTMLAttrView {
 	return HTMLAttrView{Key: "aria-" + key, Value: value}
 }
 
+// AriaLabel sets the aria-label attribute
+func AriaLabel(value string) HTMLAttrView {
+	return HTMLAttrView{Key: "aria-label", Value: value}
+}
+
 // DataAttr is for data attributes such as data-testid or data-anything
 func DataAttr(key string, value string) HTMLAttrView {
 	return HTMLAttrView{Key: "data-" + key, Value: value}
@@ -327,6 +395,8 @@ func CustomAttr(key string, value string) HTMLAttrView {
 	return HTMLAttrView{Key: key, Value: value}
 }
 
+// TODO? replace HTMLClassNameView with HTMLAttrView with AppendWithSpace strategy
+// FIXME: this completely replaces existing class attributes
 // HTMLClassNameView allows adding to the class attribute
 type HTMLClassNameView struct {
 	ClassName string
