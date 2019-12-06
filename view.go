@@ -9,16 +9,7 @@ import (
 	"golang.org/x/net/html/atom"
 )
 
-type View interface {
-	Body() View
-}
-
-type viewWriter interface {
-	render(w io.Writer)
-}
-
 type HTMLView interface {
-	Body() View
 	apply(node *html.Node)
 }
 
@@ -28,17 +19,9 @@ func buildHTMLNode(view HTMLView) *html.Node {
 	return node
 }
 
-// Render takes a View and renders it and its tree to w
-func Render(w io.Writer, view View) {
-	switch view := view.(type) {
-	case HTMLView:
-		html.Render(w, buildHTMLNode(view))
-	case viewWriter:
-		view.render(w)
-	case View:
-		body := view.Body()
-		Render(w, body)
-	}
+// Render takes an HTMLView and renders it and its tree to w
+func Render(w io.Writer, view HTMLView) {
+	html.Render(w, buildHTMLNode(view))
 }
 
 // HTMLText represents an HTML text node
@@ -49,10 +32,6 @@ type HTMLText struct {
 // Text makes a html text node with the given content
 func Text(text string) HTMLText {
 	return HTMLText{text}
-}
-
-func (_ HTMLText) Body() View {
-	return nil
 }
 
 func (text HTMLText) apply(node *html.Node) {
@@ -78,50 +57,12 @@ type Heading struct {
 	Child HTMLView
 }
 
-func H(level int, child HTMLView) View {
+func H(level int, child HTMLView) HTMLView {
 	return Heading{Level: level, Child: child}
 }
 
-// func (h Heading) apply(node *html.Node) {
-// 	node.Type = html.ElementNode
-// 	switch h.Level {
-// 	case 1:
-// 		node.Data = "h1"
-// 		node.DataAtom = atom.H1
-// 	case 2:
-// 		node.Data = "h2"
-// 		node.DataAtom = atom.H2
-// 	case 3:
-// 		node.Data = "h3"
-// 		node.DataAtom = atom.H3
-// 	case 4:
-// 		node.Data = "h4"
-// 		node.DataAtom = atom.H4
-// 	case 5:
-// 		node.Data = "h5"
-// 		node.DataAtom = atom.H5
-// 	case 6:
-// 		node.Data = "h6"
-// 		node.DataAtom = atom.H6
-// 	default:
-// 		panic(fmt.Sprintf("Unsupported heading level %v", h.Level))
-// 	}
-
-// 	node.AppendChild(buildHTMLNode(h.Child))
-// }
-
 func (h Heading) apply(node *html.Node) {
-	view := h.Body().(HTMLView)
-	view.apply(node)
-}
-
-func (h Heading) Body() View {
-	node := html.Node{
-		Type:     html.ElementNode,
-		Data:     "header",
-		DataAtom: atom.Header,
-	}
-
+	node.Type = html.ElementNode
 	switch h.Level {
 	case 1:
 		node.Data = "h1"
@@ -145,10 +86,7 @@ func (h Heading) Body() View {
 		panic(fmt.Sprintf("Unsupported heading level %v", h.Level))
 	}
 
-	return HTMLElementView{
-		base:     node,
-		children: []View{h.Child},
-	}
+	node.AppendChild(buildHTMLNode(h.Child))
 }
 
 // ButtonView makes <button>
@@ -166,8 +104,6 @@ func (button ButtonView) AddClasses(additions ClassNames) ButtonView {
 	button.classNames = append(button.classNames, additions...)
 	return button
 }
-
-func (_ ButtonView) Body() View { return nil }
 
 func (button ButtonView) Submit() ButtonView {
 	button.buttonType = "submit"
@@ -191,12 +127,10 @@ func (button ButtonView) apply(node *html.Node) {
 // HTMLElementView can be adapted to many types of HTML elements
 type HTMLElementView struct {
 	base             html.Node
-	children         []View
+	children         []HTMLView
 	classNames       ClassNames
 	childTransformer func(node *html.Node) *html.Node
 }
-
-func (_ HTMLElementView) Body() View { return nil }
 
 func (basic HTMLElementView) Class(classNames ...string) HTMLElementView {
 	basic.classNames = append(basic.classNames, classNames...)
@@ -242,7 +176,7 @@ func (basic HTMLElementView) apply(node *html.Node) {
 	}
 }
 
-func HTMLElementViewOf(tagName string, tagAtom atom.Atom, children []View) HTMLElementView {
+func HTMLElementViewOf(tagName string, tagAtom atom.Atom, children []HTMLView) HTMLElementView {
 	return HTMLElementView{
 		base: html.Node{
 			Type:     html.ElementNode,
@@ -253,35 +187,35 @@ func HTMLElementViewOf(tagName string, tagAtom atom.Atom, children []View) HTMLE
 	}
 }
 
-func Main(children ...View) HTMLElementView {
+func Main(children ...HTMLView) HTMLElementView {
 	return HTMLElementViewOf("main", atom.Main, children)
 }
 
-func Header(children ...View) HTMLElementView {
+func Header(children ...HTMLView) HTMLElementView {
 	return HTMLElementViewOf("header", atom.Header, children)
 }
 
-func Footer(children ...View) HTMLElementView {
+func Footer(children ...HTMLView) HTMLElementView {
 	return HTMLElementViewOf("footer", atom.Footer, children)
 }
 
-func Section(children ...View) HTMLElementView {
+func Section(children ...HTMLView) HTMLElementView {
 	return HTMLElementViewOf("section", atom.Section, children)
 }
 
-func Article(children ...View) HTMLElementView {
+func Article(children ...HTMLView) HTMLElementView {
 	return HTMLElementViewOf("article", atom.Article, children)
 }
 
-func Aside(children ...View) HTMLElementView {
+func Aside(children ...HTMLView) HTMLElementView {
 	return HTMLElementViewOf("aside", atom.Aside, children)
 }
 
-func Div(children ...View) HTMLElementView {
+func Div(children ...HTMLView) HTMLElementView {
 	return HTMLElementViewOf("div", atom.Div, children)
 }
 
-func DivWithClasses(classNames ClassNames, children ...View) HTMLElementView {
+func DivWithClasses(classNames ClassNames, children ...HTMLView) HTMLElementView {
 	return HTMLElementView{
 		base: html.Node{
 			Type:     html.ElementNode,
@@ -293,7 +227,7 @@ func DivWithClasses(classNames ClassNames, children ...View) HTMLElementView {
 	}
 }
 
-func Ul(children ...View) HTMLElementView {
+func Ul(children ...HTMLView) HTMLElementView {
 	return HTMLElementView{
 		base: html.Node{
 			Type:     html.ElementNode,
@@ -304,7 +238,7 @@ func Ul(children ...View) HTMLElementView {
 	}
 }
 
-func Li(children ...View) HTMLElementView {
+func Li(children ...HTMLView) HTMLElementView {
 	return HTMLElementView{
 		base: html.Node{
 			Type:     html.ElementNode,
@@ -315,7 +249,7 @@ func Li(children ...View) HTMLElementView {
 	}
 }
 
-func List(children ...View) HTMLElementView {
+func List(children ...HTMLView) HTMLElementView {
 	return HTMLElementView{
 		base: html.Node{
 			Type:     html.ElementNode,
@@ -335,7 +269,7 @@ func List(children ...View) HTMLElementView {
 	}
 }
 
-func Nav(children ...View) HTMLElementView {
+func Nav(children ...HTMLView) HTMLElementView {
 	return HTMLElementView{
 		base: html.Node{
 			Type:     html.ElementNode,
@@ -346,7 +280,7 @@ func Nav(children ...View) HTMLElementView {
 	}
 }
 
-func Link(url string, children ...View) HTMLElementView {
+func Link(url string, children ...HTMLView) HTMLElementView {
 	children = append(children, CustomAttr("href", url))
 
 	return HTMLElementView{
@@ -365,10 +299,6 @@ func Link(url string, children ...View) HTMLElementView {
 type HTMLAttrView struct {
 	Key   string
 	Value string
-}
-
-func (_ HTMLAttrView) Body() View {
-	return nil
 }
 
 func (attrView HTMLAttrView) apply(node *html.Node) {
@@ -400,10 +330,6 @@ func CustomAttr(key string, value string) HTMLAttrView {
 // HTMLClassNameView allows adding to the class attribute
 type HTMLClassNameView struct {
 	ClassName string
-}
-
-func (_ HTMLClassNameView) Body() View {
-	return nil
 }
 
 func (view HTMLClassNameView) apply(node *html.Node) {

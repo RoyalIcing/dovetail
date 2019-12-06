@@ -174,18 +174,6 @@ func TestRender(t *testing.T) {
 	})
 }
 
-type CustomView struct{}
-
-func (v CustomView) Body() View {
-	return H(5, Text("Hello"))
-}
-
-type CustomViewNested struct{}
-
-func (v CustomViewNested) Body() View {
-	return CustomView{}
-}
-
 func TestClassNames(t *testing.T) {
 	t.Run("Class()", func(t *testing.T) {
 		// subject := new(ClassNames)
@@ -203,24 +191,6 @@ func TestClassNames(t *testing.T) {
 			// t.Run(`it is a slice of two strings`, func(t *testing.T) {
 			// 	assert.Equal(t, *subject, []string{"first", "second"})
 			// })
-		})
-	})
-}
-
-func TestCustomViews(t *testing.T) {
-	t.Run("Render CustomView", func(t *testing.T) {
-		s := subjectAsString(CustomView{})
-
-		t.Run(`it renders <h5> with text Hello`, func(t *testing.T) {
-			assert.Equal(t, s, `<h5>Hello</h5>`)
-		})
-	})
-
-	t.Run("Render CustomViewNested", func(t *testing.T) {
-		s := subjectAsString(CustomViewNested{})
-
-		t.Run(`it renders <h5> with text Hello`, func(t *testing.T) {
-			assert.Equal(t, s, `<h5>Hello</h5>`)
 		})
 	})
 }
