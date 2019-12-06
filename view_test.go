@@ -356,7 +356,7 @@ func BenchmarkViewDivWithClasses1(b *testing.B) {
 	result = buf
 }
 
-func BenchmarkViewDivWithClasses2Together(b *testing.B) {
+func BenchmarkViewDivWithClasses2Arguments(b *testing.B) {
 	buf := new(bytes.Buffer)
 
 	for n := 0; n < b.N; n++ {
@@ -367,7 +367,18 @@ func BenchmarkViewDivWithClasses2Together(b *testing.B) {
 	result = buf
 }
 
-func BenchmarkViewDivWithClasses2(b *testing.B) {
+func BenchmarkViewDivWithClasses4Arguments(b *testing.B) {
+	buf := new(bytes.Buffer)
+
+	for n := 0; n < b.N; n++ {
+		buf.Reset()
+		Render(buf, Div().Class("first", "second", "third", "fourth"))
+	}
+
+	result = buf
+}
+
+func BenchmarkViewDivWithClasses2Calls(b *testing.B) {
 	buf := new(bytes.Buffer)
 
 	for n := 0; n < b.N; n++ {
@@ -378,12 +389,56 @@ func BenchmarkViewDivWithClasses2(b *testing.B) {
 	result = buf
 }
 
-func BenchmarkViewDivWithChildClassNames(b *testing.B) {
+func BenchmarkViewDivWithClasses4Calls(b *testing.B) {
+	buf := new(bytes.Buffer)
+
+	for n := 0; n < b.N; n++ {
+		buf.Reset()
+		Render(buf, Div().Class("first").Class("second").Class("third").Class("fourth"))
+	}
+
+	result = buf
+}
+
+func BenchmarkViewDivWithChildClassNames1(b *testing.B) {
+	buf := new(bytes.Buffer)
+
+	for n := 0; n < b.N; n++ {
+		buf.Reset()
+		Render(buf, Div(ClassName("first")))
+	}
+
+	result = buf
+}
+
+func BenchmarkViewDivWithChildClassNames2(b *testing.B) {
 	buf := new(bytes.Buffer)
 
 	for n := 0; n < b.N; n++ {
 		buf.Reset()
 		Render(buf, Div(ClassName("first"), ClassName("second")))
+	}
+
+	result = buf
+}
+
+func BenchmarkViewDivWithChildClassNames4(b *testing.B) {
+	buf := new(bytes.Buffer)
+
+	for n := 0; n < b.N; n++ {
+		buf.Reset()
+		Render(buf, Div(ClassName("first"), ClassName("second"), ClassName("third"), ClassName("fourth")))
+	}
+
+	result = buf
+}
+
+func BenchmarkViewDivWithChildClassNames4Arguments(b *testing.B) {
+	buf := new(bytes.Buffer)
+
+	for n := 0; n < b.N; n++ {
+		buf.Reset()
+		Render(buf, Div(ClassName("first", "second", "third", "fourth")))
 	}
 
 	result = buf

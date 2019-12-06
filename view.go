@@ -50,6 +50,11 @@ func (classNames ClassNames) Class(additions ...string) ClassNames {
 	return append(classNames, additions...)
 }
 
+// Concat adds all the class names from another instance
+func (classNames ClassNames) Concat(additions ClassNames) ClassNames {
+	return append(classNames, additions...)
+}
+
 // Strings converts the class names to a single, space-separated string
 func (classNames ClassNames) String() string {
 	return strings.Join(classNames, " ")
@@ -70,7 +75,7 @@ func (core HTMLElementCore) applyToNode(node *html.Node) {
 		case HTMLAttrView:
 			child.apply(node)
 		case HTMLClassNameView:
-			classNames = classNames.Class(child.ClassName)
+			classNames = classNames.Concat(child.classNames)
 		case HTMLView:
 			childNode := &html.Node{}
 			child.apply(childNode)
@@ -317,18 +322,17 @@ func CustomAttr(key string, value string) HTMLAttrView {
 	return HTMLAttrView{Key: key, Value: value}
 }
 
-// TODO? replace HTMLClassNameView with HTMLAttrView with AppendWithSpace strategy
-// FIXME: this completely replaces existing class attributes
 // HTMLClassNameView allows adding to the class attribute
 type HTMLClassNameView struct {
-	ClassName string
+	classNames ClassNames
 }
 
+// This method is not actually used, instead the class names are all merged before setting the class attribute
 func (view HTMLClassNameView) apply(node *html.Node) {
-	node.Attr = append(node.Attr, html.Attribute{Key: "class", Val: view.ClassName})
+	node.Attr = append(node.Attr, html.Attribute{Key: "class", Val: view.classNames.String()})
 }
 
 // ClassName adds a class name
-func ClassName(className string) HTMLClassNameView {
-	return HTMLClassNameView{ClassName: className}
+func ClassName(classNames ...string) HTMLClassNameView {
+	return HTMLClassNameView{classNames: classNames}
 }
