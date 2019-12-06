@@ -389,6 +389,17 @@ func BenchmarkViewDivWithChildClassNames(b *testing.B) {
 	result = buf
 }
 
+func BenchmarkViewListOfDivs(b *testing.B) {
+	buf := new(bytes.Buffer)
+
+	for n := 0; n < b.N; n++ {
+		buf.Reset()
+		Render(buf, List(Div(), Div(), Div(), Div(), Div()))
+	}
+
+	result = buf
+}
+
 // func BenchmarkViewH(b *testing.B) {
 // 	buf := new(bytes.Buffer)
 
