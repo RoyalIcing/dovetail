@@ -33,7 +33,7 @@ Render(
 
 ## Define components
 
-Simple components can be defined using functions:
+Simple components can be defined using functions. These functions can take any number of arguments, and return a composite of other components.
 
 ```go
 func PrimaryButton(text string) View {
@@ -53,16 +53,18 @@ func PrimaryNav(currentURL string) HTMLText {
 }
 
 func (view PrimaryNavView) item(to string, text string) HTMLView {
-  NavLink(to, Text(text), When(view.CurrentURL == to, Attr("aria-current", "page")))
+  Link(to, Text(text), When(view.CurrentURL == to, Attr("aria-current", "page")))
 }
 
-func (view PrimaryNavView) Body() View {
+func (view PrimaryNavView) Body() HTMLView {
 	return Nav(
-    view.item("/", "Home"),
-    view.item("/about", "About"),
-    view.item("/pricing", "Pricing"),
-    view.item("/sign-in", "Sign In"),
-    view.item("/join", "Join"),
+    List(
+      view.item("/", "Home"),
+      view.item("/about", "About"),
+      view.item("/pricing", "Pricing"),
+      view.item("/sign-in", "Sign In"),
+      view.item("/join", "Join"),
+    ),
   )
 }
 ```
