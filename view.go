@@ -20,8 +20,10 @@ func buildHTMLNode(view HTMLView) *html.Node {
 }
 
 // Render takes an HTMLView and renders it and its tree to w
-func Render(w io.Writer, view HTMLView) {
-	html.Render(w, buildHTMLNode(view))
+func Render(w io.Writer, views ...HTMLView) {
+	for _, view := range views {
+		html.Render(w, buildHTMLNode(view))
+	}
 }
 
 // HTMLText represents an HTML text node
