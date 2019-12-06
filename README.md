@@ -33,39 +33,11 @@ Render(
 
 ## Define components
 
-Simple components can be defined using functions. These functions can take any number of arguments, and return a composite of other components.
+Components are defined using functions. These functions can take any number of arguments, and return a composite of other components.
 
 ```go
 func PrimaryButton(text string) View {
 	return Button(Text(text)).Class("btn btn-primary")
-}
-```
-
-More complex components can be defined using structs that hold state:
-
-```go
-type PrimaryNavView struct {
-  CurrentURL string
-}
-
-func PrimaryNav(currentURL string) HTMLText {
-	return PrimaryNavView{CurrentURL: currentURL}
-}
-
-func (view PrimaryNavView) item(to string, text string) HTMLView {
-  Link(to, Text(text), When(view.CurrentURL == to, Attr("aria-current", "page")))
-}
-
-func (view PrimaryNavView) Body() HTMLView {
-	return Nav(
-    List(
-      view.item("/", "Home"),
-      view.item("/about", "About"),
-      view.item("/pricing", "Pricing"),
-      view.item("/sign-in", "Sign In"),
-      view.item("/join", "Join"),
-    ),
-  )
 }
 ```
 
