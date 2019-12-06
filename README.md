@@ -2,8 +2,10 @@
 
 Friendly HTML Components for Go, inspired by SwiftUI, Elm, React.
 
-- Produce ARIA-compatible HTML markup easily
-- Create components using functions
+- Produce ARIA-compliant HTML markup easily.
+- Create components using functions.
+- Supports ARIA and data attributes.
+- Conveniently wrap elements in `<ul>` & `<li>` with `List()`
 
 ```go
 Render(
