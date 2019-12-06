@@ -113,7 +113,7 @@ func Hover(baseName TailwindClassName) TailwindClassName {
 }
 
 func (basic HTMLElementView) Tailwind(additions ...TailwindClassName) HTMLElementView {
-	basic.classNames = basic.classNames.Tailwind(additions...)
+	basic.elementCore.classNames = basic.elementCore.classNames.Tailwind(additions...)
 	return basic
 
 	// classNameStrings := make([]string, 0, len(additions))

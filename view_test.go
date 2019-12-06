@@ -257,7 +257,7 @@ func TestViewNilChild(t *testing.T) {
 
 var result *bytes.Buffer
 
-// func BenchmarkLink(b *testing.B) {
+// func BenchmarkViewLink(b *testing.B) {
 // 	buf := new(bytes.Buffer)
 
 // 	for n := 0; n < b.N; n++ {
@@ -268,7 +268,7 @@ var result *bytes.Buffer
 // 	result = buf
 // }
 
-func BenchmarkText(b *testing.B) {
+func BenchmarkViewText(b *testing.B) {
 	buf := new(bytes.Buffer)
 
 	for n := 0; n < b.N; n++ {
@@ -279,7 +279,18 @@ func BenchmarkText(b *testing.B) {
 	result = buf
 }
 
-func BenchmarkHeader(b *testing.B) {
+func BenchmarkViewH1(b *testing.B) {
+	buf := new(bytes.Buffer)
+
+	for n := 0; n < b.N; n++ {
+		buf.Reset()
+		Render(buf, H(1, Text("Click me")))
+	}
+
+	result = buf
+}
+
+func BenchmarkViewHeader(b *testing.B) {
 	buf := new(bytes.Buffer)
 
 	for n := 0; n < b.N; n++ {
@@ -290,62 +301,7 @@ func BenchmarkHeader(b *testing.B) {
 	result = buf
 }
 
-func BenchmarkDiv(b *testing.B) {
-	buf := new(bytes.Buffer)
-
-	for n := 0; n < b.N; n++ {
-		buf.Reset()
-		Render(buf, Div())
-	}
-
-	result = buf
-}
-
-func BenchmarkDivWithClasses1(b *testing.B) {
-	buf := new(bytes.Buffer)
-
-	for n := 0; n < b.N; n++ {
-		buf.Reset()
-		Render(buf, Div().Class("first"))
-	}
-
-	result = buf
-}
-
-func BenchmarkDivWithClasses2Together(b *testing.B) {
-	buf := new(bytes.Buffer)
-
-	for n := 0; n < b.N; n++ {
-		buf.Reset()
-		Render(buf, Div().Class("first", "second"))
-	}
-
-	result = buf
-}
-
-func BenchmarkDivWithClasses2(b *testing.B) {
-	buf := new(bytes.Buffer)
-
-	for n := 0; n < b.N; n++ {
-		buf.Reset()
-		Render(buf, Div().Class("first").Class("second"))
-	}
-
-	result = buf
-}
-
-func BenchmarkDivWithChildClassNames(b *testing.B) {
-	buf := new(bytes.Buffer)
-
-	for n := 0; n < b.N; n++ {
-		buf.Reset()
-		Render(buf, Div(ClassName("first"), ClassName("second")))
-	}
-
-	result = buf
-}
-
-func BenchmarkButton(b *testing.B) {
+func BenchmarkViewButton(b *testing.B) {
 	buf := new(bytes.Buffer)
 
 	for n := 0; n < b.N; n++ {
@@ -356,7 +312,7 @@ func BenchmarkButton(b *testing.B) {
 	result = buf
 }
 
-func BenchmarkButtonSubmit(b *testing.B) {
+func BenchmarkViewButtonSubmit(b *testing.B) {
 	buf := new(bytes.Buffer)
 
 	for n := 0; n < b.N; n++ {
@@ -367,7 +323,73 @@ func BenchmarkButtonSubmit(b *testing.B) {
 	result = buf
 }
 
-// func BenchmarkH(b *testing.B) {
+func BenchmarkViewSpecialButtonSubmit(b *testing.B) {
+	buf := new(bytes.Buffer)
+
+	for n := 0; n < b.N; n++ {
+		buf.Reset()
+		Render(buf, SpecialButton(ButtonSubmit)(Text("Click me")))
+	}
+
+	result = buf
+}
+
+func BenchmarkViewDiv(b *testing.B) {
+	buf := new(bytes.Buffer)
+
+	for n := 0; n < b.N; n++ {
+		buf.Reset()
+		Render(buf, Div())
+	}
+
+	result = buf
+}
+
+func BenchmarkViewDivWithClasses1(b *testing.B) {
+	buf := new(bytes.Buffer)
+
+	for n := 0; n < b.N; n++ {
+		buf.Reset()
+		Render(buf, Div().Class("first"))
+	}
+
+	result = buf
+}
+
+func BenchmarkViewDivWithClasses2Together(b *testing.B) {
+	buf := new(bytes.Buffer)
+
+	for n := 0; n < b.N; n++ {
+		buf.Reset()
+		Render(buf, Div().Class("first", "second"))
+	}
+
+	result = buf
+}
+
+func BenchmarkViewDivWithClasses2(b *testing.B) {
+	buf := new(bytes.Buffer)
+
+	for n := 0; n < b.N; n++ {
+		buf.Reset()
+		Render(buf, Div().Class("first").Class("second"))
+	}
+
+	result = buf
+}
+
+func BenchmarkViewDivWithChildClassNames(b *testing.B) {
+	buf := new(bytes.Buffer)
+
+	for n := 0; n < b.N; n++ {
+		buf.Reset()
+		Render(buf, Div(ClassName("first"), ClassName("second")))
+	}
+
+	result = buf
+}
+
+// func BenchmarkViewH(b *testing.B) {
 // 	buf := new(bytes.Buffer)
 
 // 	for n := 0; n < b.N; n++ {
@@ -378,7 +400,7 @@ func BenchmarkButtonSubmit(b *testing.B) {
 // 	result = buf
 // }
 
-// func BenchmarkPremadeH(b *testing.B) {
+// func BenchmarkViewPremadeH(b *testing.B) {
 // 	buf := new(bytes.Buffer)
 // 	view := H{1, Text("Click me")}
 
@@ -390,7 +412,7 @@ func BenchmarkButtonSubmit(b *testing.B) {
 // 	result = buf
 // }
 
-// func BenchmarkHB(b *testing.B) {
+// func BenchmarkViewHB(b *testing.B) {
 // 	buf := new(bytes.Buffer)
 
 // 	for n := 0; n < b.N; n++ {
@@ -401,7 +423,7 @@ func BenchmarkButtonSubmit(b *testing.B) {
 // 	result = buf
 // }
 
-// func BenchmarkHeading(b *testing.B) {
+// func BenchmarkViewHeading(b *testing.B) {
 // 	buf := new(bytes.Buffer)
 
 // 	for n := 0; n < b.N; n++ {
@@ -412,18 +434,7 @@ func BenchmarkButtonSubmit(b *testing.B) {
 // 	result = buf
 // }
 
-func BenchmarkH1(b *testing.B) {
-	buf := new(bytes.Buffer)
-
-	for n := 0; n < b.N; n++ {
-		buf.Reset()
-		Render(buf, H(1, Text("Click me")))
-	}
-
-	result = buf
-}
-
-// func BenchmarkPremadeHB(b *testing.B) {
+// func BenchmarkViewPremadeHB(b *testing.B) {
 // 	buf := new(bytes.Buffer)
 // 	view := HB{1, Text("Click me")}
 
