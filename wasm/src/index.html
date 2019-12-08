@@ -15,7 +15,17 @@
         go.run(result.instance);
       });
       
-      function updateDOM(html) {
+      function updateHead(html) {
+        const div = document.createElement('div');
+        div.innerHTML = html;
+
+        while(div.firstChild) {
+          div.firstChild.classList.add('dovetail-managed');
+          document.head.appendChild(div.firstChild);
+        }
+      }
+
+      function updateBody(html) {
         document.getElementById("wasm").innerHTML = html;
       }
     </script>

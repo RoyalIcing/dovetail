@@ -24,5 +24,5 @@ func main() {
 	Render(b, view)
 	rawHTML := b.String()
 
-	js.Global().Call("updateDOM", rawHTML)
+	js.Global().Call("updateBody", rawHTML)
 }
