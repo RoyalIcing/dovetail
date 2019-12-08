@@ -1,4 +1,4 @@
-package main
+package dovetail
 
 // TailwindClassName is a subset of strings allowed as Tailwind class names
 type TailwindClassName string
