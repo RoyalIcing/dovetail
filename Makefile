@@ -18,8 +18,11 @@ test: tmp/gotest
 test_bench:
 	go test -p 1 -timeout 30s -bench="${PATTERN}" -benchmem -v -run "Benchmark" ./...
 
+test_watch_receiver:
+	-make test
+
 test_watch:
-	watchexec -e go "clear && make test"
+	watchexec -e go "clear && make test_watch_receiver"
 
 wasm/build/main.wasm: *.go
 	mkdir -p wasm/build
