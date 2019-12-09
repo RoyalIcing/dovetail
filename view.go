@@ -14,7 +14,8 @@ type HTMLView interface {
 	apply(node *html.Node)
 }
 
-func buildHTMLNode(view HTMLView) *html.Node {
+// Build takes an HTMLView and creates an html.Node
+func Build(view HTMLView) *html.Node {
 	node := &html.Node{}
 	view.apply(node)
 	return node
@@ -23,7 +24,7 @@ func buildHTMLNode(view HTMLView) *html.Node {
 // Render takes an HTMLView and renders it and its tree to w
 func Render(w io.Writer, views ...HTMLView) {
 	for _, view := range views {
-		html.Render(w, buildHTMLNode(view))
+		html.Render(w, Build(view))
 	}
 }
 
