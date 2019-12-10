@@ -85,7 +85,7 @@ func BenchmarkTailwindAddClasses2Classes(b *testing.B) {
 
 	for n := 0; n < b.N; n++ {
 		buf.Reset()
-		Render(buf, Div().AddClasses(Tailwind(Text2XL, FontBold)))
+		Render(buf, Div().AddClasses(TailwindToClass(Text2XL, FontBold)))
 	}
 
 	result = buf
@@ -96,7 +96,7 @@ func BenchmarkTailwindAddClasses4Classes(b *testing.B) {
 
 	for n := 0; n < b.N; n++ {
 		buf.Reset()
-		Render(buf, Div().AddClasses(Tailwind(Pt8, Pb8, Text2XL, FontBold)))
+		Render(buf, Div().AddClasses(TailwindToClass(Pt8, Pb8, Text2XL, FontBold)))
 	}
 
 	result = buf
@@ -107,7 +107,7 @@ func BenchmarkTailwindAddClasses8Classes(b *testing.B) {
 
 	for n := 0; n < b.N; n++ {
 		buf.Reset()
-		Render(buf, Div().AddClasses(Tailwind(Pt8, Pb8, Mb8, Text2XL, FontBold, TextBlue300, BgBlue800, RoundedFull)))
+		Render(buf, Div().AddClasses(TailwindToClass(Pt8, Pb8, Mb8, Text2XL, FontBold, TextBlue300, BgBlue800, RoundedFull)))
 	}
 
 	result = buf
@@ -118,7 +118,7 @@ func BenchmarkTailwindDivWithClasses8Classes(b *testing.B) {
 
 	for n := 0; n < b.N; n++ {
 		buf.Reset()
-		Render(buf, DivWithClasses(Tailwind(Pt8, Pb8, Mb8, Text2XL, FontBold, TextBlue300, BgBlue800, RoundedFull)))
+		Render(buf, DivWithClasses(TailwindToClass(Pt8, Pb8, Mb8, Text2XL, FontBold, TextBlue300, BgBlue800, RoundedFull)))
 	}
 
 	result = buf

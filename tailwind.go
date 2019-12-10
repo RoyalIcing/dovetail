@@ -54,7 +54,7 @@ const (
 	RoundedFull TailwindClassName = "rounded-full"
 )
 
-func Tailwind(additions ...TailwindClassName) ClassNames {
+func TailwindToClass(additions ...TailwindClassName) ClassNames {
 	classNames := make(ClassNames, 0, len(additions))
 	for _, addition := range additions {
 		classNames = append(classNames, string(addition))
