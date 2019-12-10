@@ -112,16 +112,16 @@ func Hover(baseName TailwindClassName) TailwindClassName {
 	return TailwindClassName("hover:" + string(baseName))
 }
 
+// Tailwind adds TailwindCSS class names
+func Tailwind(additions ...TailwindClassName) HTMLClassNameView {
+	enhancer := Class()
+	enhancer.classNames.Tailwind(additions...)
+	return enhancer
+}
+
 func (basic HTMLElementView) Tailwind(additions ...TailwindClassName) HTMLElementView {
 	basic.elementCore.classNames = basic.elementCore.classNames.Tailwind(additions...)
 	return basic
-
-	// classNameStrings := make([]string, 0, len(additions))
-	// for _, addition := range additions {
-	// 	classNameStrings = append(classNameStrings, string(addition))
-	// }
-	// return basic.Class(classNameStrings...)
-
 }
 
 func (basic HTMLElementView) Md(classNames ...TailwindClassName) HTMLElementView {
@@ -130,7 +130,4 @@ func (basic HTMLElementView) Md(classNames ...TailwindClassName) HTMLElementView
 		classNameStrings = append(classNameStrings, "md:"+string(className))
 	}
 	return basic.Class(classNameStrings...)
-	// mutable := &basic
-	// mutable.Class(classNameStrings...)
-	// return *mutable
 }
