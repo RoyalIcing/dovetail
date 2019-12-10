@@ -64,34 +64,29 @@ type FieldHTMLView struct {
 	inputType      string
 	labelInnerView HTMLView
 	elementCore    HTMLElementCore
+	inputCore      HTMLElementCore
 }
 
-func FieldLabelled(labelText string, options ...func(FieldHTMLView) FieldHTMLView) FieldHTMLView {
-	field := FieldHTMLView{labelInnerView: Text(labelText)}
-	for _, option := range options {
-		field = option(field)
-	}
-	return field
-}
+type FieldOption func(FieldHTMLView) FieldHTMLView
 
-func FieldNamed(formName string, options ...func(FieldHTMLView) FieldHTMLView) FieldHTMLView {
-	field := FieldHTMLView{formName: formName}
-	for _, option := range options {
-		field = option(field)
-	}
-	return field
-}
-
-func InputType(inputType string) func(FieldHTMLView) FieldHTMLView {
+func (option FieldOption) setType(inputType string) FieldOption {
 	return func(field FieldHTMLView) FieldHTMLView {
+		field = option(field)
 		field.inputType = inputType
 		return field
 	}
 }
 
-var FileInput = InputType("file")
+func FieldLabelled(labelText string, option FieldOption, children ...HTMLEnhancer) FieldHTMLView {
+	field := FieldHTMLView{labelInnerView: Text(labelText)}
+	field = option(field)
+	for _, child := range children {
+		field.elementCore.children = append(field.elementCore.children, child)
+	}
+	return field
+}
 
-func InputNamed(inputName string, options ...func(FieldHTMLView) FieldHTMLView) func(FieldHTMLView) FieldHTMLView {
+func inputNamed(inputName string, options ...FieldOption) FieldOption {
 	return func(field FieldHTMLView) FieldHTMLView {
 		field.formName = inputName
 		for _, option := range options {
@@ -101,13 +96,20 @@ func InputNamed(inputName string, options ...func(FieldHTMLView) FieldHTMLView) 
 	}
 }
 
-func (field FieldHTMLView) Type(inputType string) FieldHTMLView {
-	field.inputType = inputType
-	return field
+func TextInput(inputName string, options ...FieldOption) FieldOption {
+	return inputNamed(inputName, options...).setType("text")
 }
 
-func (field FieldHTMLView) Label(view HTMLView) FieldHTMLView {
-	field.labelInnerView = view
+func FileInput(inputName string, options ...FieldOption) FieldOption {
+	return inputNamed(inputName, options...).setType("file")
+}
+
+func NumberInput(inputName string, options ...FieldOption) FieldOption {
+	return inputNamed(inputName, options...).setType("number")
+}
+
+func (field FieldHTMLView) setType(inputType string) FieldHTMLView {
+	field.inputType = inputType
 	return field
 }
 

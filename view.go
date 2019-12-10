@@ -14,6 +14,12 @@ type HTMLView interface {
 	apply(node *html.Node)
 }
 
+// HTMLEnhancer adds attributes but doesn’t add children
+type HTMLEnhancer interface {
+	HTMLView
+	enhances() bool
+}
+
 // Build takes an HTMLView and creates an html.Node
 func Build(view HTMLView) *html.Node {
 	node := &html.Node{}
@@ -303,6 +309,8 @@ func (attrView HTMLAttrView) apply(node *html.Node) {
 	node.Attr = append(node.Attr, html.Attribute{Key: attrView.Key, Val: attrView.Value})
 }
 
+func (HTMLAttrView) enhances() bool { return true }
+
 // AriaAttr is for aria attributes such as aria-label or aria-current
 func AriaAttr(key string, value string) HTMLAttrView {
 	return HTMLAttrView{Key: "aria-" + key, Value: value}
@@ -333,7 +341,14 @@ func (view HTMLClassNameView) apply(node *html.Node) {
 	node.Attr = append(node.Attr, html.Attribute{Key: "class", Val: view.classNames.String()})
 }
 
+func (HTMLClassNameView) enhances() bool { return true }
+
 // ClassName adds a class name
 func ClassName(classNames ...string) HTMLClassNameView {
+	return HTMLClassNameView{classNames: classNames}
+}
+
+// Class adds a class name
+func Class(classNames ...string) HTMLClassNameView {
 	return HTMLClassNameView{classNames: classNames}
 }

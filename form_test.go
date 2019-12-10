@@ -1,6 +1,7 @@
 package dovetail
 
 import (
+	"bytes"
 	"strings"
 	"testing"
 
@@ -32,20 +33,16 @@ func TestForm(t *testing.T) {
 		})
 	})
 
-	t.Run("Rendering Field named image with type of file", func(t *testing.T) {
-		s := subjectAsString(FieldLabelled("Add picture", InputNamed("image", InputType("file"))))
+	t.Run("Rendering Field with text input named description", func(t *testing.T) {
+		s := subjectAsString(FieldLabelled("Write description", TextInput("description")))
 
 		t.Run(`it renders <label> with child <span> with label text and <input> with type and name attibutes`, func(t *testing.T) {
-			assert.Equal(t, s, `<label><span>Add picture</span><input type="file" name="image"/></label>`)
+			assert.Equal(t, s, `<label><span>Write description</span><input type="text" name="description"/></label>`)
 		})
 	})
 
-	t.Run("Rendering Field named image with type of file", func(t *testing.T) {
-		s := subjectAsString(
-			FieldNamed("image").
-				Label(Text("Add picture")).
-				Type("file"),
-		)
+	t.Run("Rendering Field with file input named image", func(t *testing.T) {
+		s := subjectAsString(FieldLabelled("Add picture", FileInput("image")))
 
 		t.Run(`it renders <label> with child <span> with label text and <input> with type and name attibutes`, func(t *testing.T) {
 			assert.Equal(t, s, `<label><span>Add picture</span><input type="file" name="image"/></label>`)
@@ -53,7 +50,7 @@ func TestForm(t *testing.T) {
 	})
 
 	t.Run("Rendering Field with type of number", func(t *testing.T) {
-		s := subjectAsString(FieldNamed("fave_number").Type("number").Label(Text("Favorite number")))
+		s := subjectAsString(FieldLabelled("Favorite number", NumberInput("fave_number")))
 
 		t.Run(`it renders <label> with child <span> with label text and <input> with type and name attibutes`, func(t *testing.T) {
 			assert.Equal(t, s, `<label><span>Favorite number</span><input type="number" name="fave_number"/></label>`)
@@ -63,7 +60,11 @@ func TestForm(t *testing.T) {
 	t.Run("Rendering Form with child field and submit button", func(t *testing.T) {
 		s := subjectAsString(
 			FormTo("/things", Multipart).With(
-				FieldLabelled("Add picture", InputNamed("image", FileInput)),
+				Class("border"),
+				FieldLabelled("Add picture",
+					FileInput("image"),
+					Class("block"),
+				),
 				Button(Text("Upload")).Submit(),
 				// Button("Upload", Submit),
 				// Button(Submit, Text("Upload")),
@@ -73,11 +74,49 @@ func TestForm(t *testing.T) {
 
 		t.Run(`it renders <form> with labelled input and submit button`, func(t *testing.T) {
 			assert.Equal(t, s, strings.Replace(`
-<form method="post" action="/things" enctype="multipart/form-data">
-<label><span>Add picture</span><input type="file" name="image"/></label>
+<form method="post" action="/things" enctype="multipart/form-data" class="border">
+<label class="block"><span>Add picture</span><input type="file" name="image"/></label>
 <button type="submit">Upload</button>
 </form>
 `, "\n", "", -1))
 		})
 	})
+}
+
+func BenchmarkFormField(b *testing.B) {
+	buf := new(bytes.Buffer)
+
+	for n := 0; n < b.N; n++ {
+		buf.Reset()
+		Render(buf, FieldLabelled("Add picture", FileInput("image")))
+	}
+
+	result = buf
+}
+
+func BenchmarkFormFieldWithClass(b *testing.B) {
+	buf := new(bytes.Buffer)
+
+	for n := 0; n < b.N; n++ {
+		buf.Reset()
+		Render(buf, FieldLabelled("Add picture",
+			FileInput("image"),
+			Class("block"),
+		))
+	}
+
+	result = buf
+}
+
+func BenchmarkFormFieldWithClass2(b *testing.B) {
+	buf := new(bytes.Buffer)
+
+	for n := 0; n < b.N; n++ {
+		buf.Reset()
+		Render(buf, FieldLabelled("Add picture",
+			FileInput("image"),
+		).Class("block"))
+	}
+
+	result = buf
 }
