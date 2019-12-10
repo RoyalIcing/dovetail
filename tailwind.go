@@ -4,6 +4,9 @@ package dovetail
 type TailwindClassName string
 
 const (
+	// MaxWLG max width to lg breakpoint
+	MaxWLG TailwindClassName = "max-w-lg"
+
 	// Pt1 padding top of 1
 	Pt1 TailwindClassName = "pt-1"
 	// Pt2 padding top of 2
@@ -25,6 +28,8 @@ const (
 	// Py1 padding top and bottom of 1
 	Py1 TailwindClassName = "py-1"
 
+	// MxAuto margin left and right of auto
+	MxAuto TailwindClassName = "mx-auto"
 	// Mb8 margin bottom of 8
 	Mb8 TailwindClassName = "mb-8"
 
