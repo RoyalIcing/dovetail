@@ -8,7 +8,15 @@ import (
 )
 
 func TestTailwind(t *testing.T) {
-	t.Run("Style with padding and text styles", func(t *testing.T) {
+	t.Run("Func with padding and text styles", func(t *testing.T) {
+		s := subjectAsString(Div(Tailwind(Pt8, Pb8, Text2XL, FontBold)))
+
+		t.Run(`it renders <div> with class "pt-8 pb-8 text-2xl font-bold"`, func(t *testing.T) {
+			assert.Equal(t, s, `<div class="pt-8 pb-8 text-2xl font-bold"></div>`)
+		})
+	})
+
+	t.Run("Method with padding and text styles", func(t *testing.T) {
 		s := subjectAsString(Div().Tailwind(Pt8, Pb8, Text2XL, FontBold))
 
 		t.Run(`it renders <div> with class "pt-8 pb-8 text-2xl font-bold"`, func(t *testing.T) {
@@ -16,7 +24,7 @@ func TestTailwind(t *testing.T) {
 		})
 	})
 
-	t.Run("Style with md styles", func(t *testing.T) {
+	t.Run("Method with md styles", func(t *testing.T) {
 		s := subjectAsString(Div().Tailwind(Pt8, Pb8, TextBase, FontBold).Md(Pt1, Text2XL))
 
 		t.Run(`it renders <div> with class "pt-8 pb-8 text-base font-bold md:pt-1 md:text-2xl"`, func(t *testing.T) {

@@ -115,7 +115,7 @@ func Hover(baseName TailwindClassName) TailwindClassName {
 // Tailwind adds TailwindCSS class names
 func Tailwind(additions ...TailwindClassName) HTMLClassNameView {
 	enhancer := Class()
-	enhancer.classNames.Tailwind(additions...)
+	enhancer.classNames = enhancer.classNames.Tailwind(additions...)
 	return enhancer
 }
 
