@@ -198,6 +198,10 @@ type HTMLElementView struct {
 	elementCore HTMLElementCore
 }
 
+func (el HTMLElementView) Use(enhancers ...HTMLEnhancer) HTMLElementView {
+	el.elementCore = el.elementCore.Use(enhancers...)
+}
+
 func (basic HTMLElementView) Class(classNames ...string) HTMLElementView {
 	basic.elementCore.classNames = append(basic.elementCore.classNames, classNames...)
 	return basic
