@@ -43,13 +43,13 @@ func TestRender(t *testing.T) {
 		})
 	})
 
-	// t.Run("Rendering LinkView", func(t *testing.T) {
-	// 	s := subjectAsString(LinkView{To: "https://example.org/", Text: "Hello"})
+	t.Run("Rendering Img", func(t *testing.T) {
+		s := subjectAsString(Img("https://example.org/sunrise.jpg", "Sunrise at the beach", CustomAttr("width", "200")))
 
-	// 	t.Run(`it renders <a> with href and child text`, func(t *testing.T) {
-	// 		assert.Equal(t, s, `<a href="https://example.org/">Hello</a>`)
-	// 	})
-	// })
+		t.Run(`it renders <img> with src, alt, and width`, func(t *testing.T) {
+			assert.Equal(t, s, `<img src="https://example.org/sunrise.jpg" alt="Sunrise at the beach" width="200"/>`)
+		})
+	})
 
 	t.Run("Rendering Nav with items and aria label Primary", func(t *testing.T) {
 		s := subjectAsString(Nav(AriaLabel("Primary"), Ul(Li(Link("/about", Text("About"))))))

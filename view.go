@@ -305,6 +305,12 @@ func Link(url string, children ...HTMLView) HTMLElementView {
 	return HTMLElementViewOf("a", atom.A, children)
 }
 
+func Img(srcURL string, alt string, enhancers ...HTMLEnhancer) HTMLElementView {
+	view := HTMLElementViewOf("img", atom.Img, []HTMLView{CustomAttr("src", srcURL), CustomAttr("alt", alt)})
+	view.elementCore = view.elementCore.Use(enhancers...)
+	return view
+}
+
 //
 
 // HTMLAttrView allows setting HTML attributes
