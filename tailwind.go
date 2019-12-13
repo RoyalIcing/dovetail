@@ -30,10 +30,10 @@ const (
 	Pl3 TailwindClassName = "pl-3"
 
 	// Pr1 padding right of 1
-	Pl1 TailwindClassName = "pr-1"
-	// Pl2 padding right of 2
+	Pr1 TailwindClassName = "pr-1"
+	// Pr2 padding right of 2
 	Pr2 TailwindClassName = "pr-2"
-	// Pl3 padding right of 3
+	// Pr3 padding right of 3
 	Pr3 TailwindClassName = "pr-3"
 
 	// Px3 padding left and right of 3
