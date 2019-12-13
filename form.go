@@ -63,6 +63,14 @@ type FieldHTMLView struct {
 
 type FieldOption func(FieldHTMLView) FieldHTMLView
 
+func (option FieldOption) Use(enhancers ...HTMLEnhancer) FieldOption {
+	return func(field FieldHTMLView) FieldHTMLView {
+		field = option(field)
+		field.inputCore = field.inputCore.Use(enhancers...)
+		return field
+	}
+}
+
 func (option FieldOption) setType(inputType string) FieldOption {
 	return func(field FieldHTMLView) FieldHTMLView {
 		field = option(field)

@@ -74,6 +74,14 @@ type HTMLElementCore struct {
 	childTransformer func(node *html.Node) *html.Node
 }
 
+// Use the provided enhancers
+func (core HTMLElementCore) Use(enhancers ...HTMLEnhancer) HTMLElementCore {
+	for _, enhancer := range enhancers {
+		core.children = append(core.children, enhancer)
+	}
+	return core
+}
+
 func (core HTMLElementCore) applyToNode(node *html.Node) {
 	classNames := core.classNames
 
