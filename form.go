@@ -63,7 +63,7 @@ type FieldHTMLView struct {
 	formName       string
 	inputType      string
 	labelInnerView HTMLView
-	elementCore    HTMLElementCore
+	labelCore      HTMLElementCore
 	inputCore      HTMLElementCore
 }
 
@@ -81,7 +81,7 @@ func FieldLabelled(labelText string, option FieldOption, children ...HTMLEnhance
 	field := FieldHTMLView{labelInnerView: Text(labelText)}
 	field = option(field)
 	for _, child := range children {
-		field.elementCore.children = append(field.elementCore.children, child)
+		field.labelCore.children = append(field.labelCore.children, child)
 	}
 	return field
 }
@@ -114,7 +114,7 @@ func (field FieldHTMLView) setType(inputType string) FieldHTMLView {
 }
 
 func (field FieldHTMLView) Class(className string) FieldHTMLView {
-	field.elementCore.classNames = field.elementCore.classNames.Class(className)
+	field.labelCore.classNames = field.labelCore.classNames.Class(className)
 	return field
 }
 
@@ -145,5 +145,5 @@ func (field FieldHTMLView) apply(node *html.Node) {
 	node.AppendChild(spanEl)
 	node.AppendChild(inputEl)
 
-	field.elementCore.applyToNode(node)
+	field.labelCore.applyToNode(node)
 }
