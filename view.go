@@ -200,6 +200,7 @@ type HTMLElementView struct {
 
 func (el HTMLElementView) Use(enhancers ...HTMLEnhancer) HTMLElementView {
 	el.elementCore = el.elementCore.Use(enhancers...)
+	return el
 }
 
 func (basic HTMLElementView) Class(classNames ...string) HTMLElementView {
