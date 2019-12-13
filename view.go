@@ -320,6 +320,10 @@ func Img(srcURL string, alt string, enhancers ...HTMLEnhancer) HTMLElementView {
 	return view
 }
 
+func TextWith(text string, enhancers ...HTMLEnhancer) HTMLElementView {
+	return HTMLElementViewOf("span", atom.Span, []HTMLView{Text(text)}).Use(enhancers...)
+}
+
 //
 
 // HTMLAttrView allows setting HTML attributes

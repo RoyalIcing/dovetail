@@ -51,6 +51,14 @@ func TestRender(t *testing.T) {
 		})
 	})
 
+	t.Run("Rendering TextWith", func(t *testing.T) {
+		s := subjectAsString(TextWith("some text", Class("some classes"), CustomAttr("data-hello", "world")))
+
+		t.Run(`it renders <span> with child text, class and data attr`, func(t *testing.T) {
+			assert.Equal(t, s, `<span data-hello="world" class="some classes">some text</span>`)
+		})
+	})
+
 	t.Run("Rendering Nav with items and aria label Primary", func(t *testing.T) {
 		s := subjectAsString(Nav(AriaLabel("Primary"), Ul(Li(Link("/about", Text("About"))))))
 
