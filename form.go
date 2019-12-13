@@ -34,12 +34,6 @@ func (form FormHTMLView) Multipart() FormHTMLView {
 	return form
 }
 
-// Add the provided views as children
-func (form FormHTMLView) Add(view ...HTMLView) FormHTMLView {
-	form.elementCore.children = append(form.elementCore.children, view...)
-	return form
-}
-
 // With adds the provided views as children
 func (form FormHTMLView) With(view ...HTMLView) FormHTMLView {
 	form.elementCore.children = append(form.elementCore.children, view...)
