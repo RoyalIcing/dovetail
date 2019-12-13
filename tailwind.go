@@ -76,7 +76,7 @@ const (
 	RoundedFull TailwindClassName = "rounded-full"
 )
 
-func Tailwind(additions ...TailwindClassName) ClassNames {
+func TailwindToClass(additions ...TailwindClassName) ClassNames {
 	classNames := make(ClassNames, 0, len(additions))
 	for _, addition := range additions {
 		classNames = append(classNames, string(addition))
@@ -132,6 +132,13 @@ func (changer ClassNamesChanger) Md(additions ...TailwindClassName) ClassNamesCh
 
 func Hover(baseName TailwindClassName) TailwindClassName {
 	return TailwindClassName("hover:" + string(baseName))
+}
+
+// Tailwind adds TailwindCSS class names
+func Tailwind(additions ...TailwindClassName) HTMLClassNameView {
+	enhancer := Class()
+	enhancer.classNames = enhancer.classNames.Tailwind(additions...)
+	return enhancer
 }
 
 func (basic HTMLElementView) Tailwind(additions ...TailwindClassName) HTMLElementView {
