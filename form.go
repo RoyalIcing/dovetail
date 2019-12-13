@@ -145,6 +145,8 @@ func (field FieldHTMLView) apply(node *html.Node) {
 	node.DataAtom = atom.Label
 
 	node.AppendChild(spanEl)
+
+	field.inputCore.applyToNode(inputEl)
 	node.AppendChild(inputEl)
 
 	field.labelCore.applyToNode(node)

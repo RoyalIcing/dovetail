@@ -41,6 +41,14 @@ func TestForm(t *testing.T) {
 		})
 	})
 
+	t.Run("Rendering Field with text input with class", func(t *testing.T) {
+		s := subjectAsString(FieldLabelled("Write description", TextInput("description").Use(Class("some classes"))))
+
+		t.Run(`it renders <label> with child <span> with label text and <input> with type and name attibutes`, func(t *testing.T) {
+			assert.Equal(t, s, `<label><span>Write description</span><input type="text" name="description" class="some classes"/></label>`)
+		})
+	})
+
 	t.Run("Rendering Field with file input named image", func(t *testing.T) {
 		s := subjectAsString(FieldLabelled("Add picture", FileInput("image")))
 
