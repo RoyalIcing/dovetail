@@ -203,27 +203,27 @@ func (el HTMLElementView) Use(enhancers ...HTMLEnhancer) HTMLElementView {
 	return el
 }
 
-func (basic HTMLElementView) Class(classNames ...string) HTMLElementView {
-	basic.elementCore.classNames = append(basic.elementCore.classNames, classNames...)
-	return basic
+func (el HTMLElementView) Class(classNames ...string) HTMLElementView {
+	el.elementCore.classNames = append(el.elementCore.classNames, classNames...)
+	return el
 }
 
-func (basic HTMLElementView) AddClasses(additions ClassNames) HTMLElementView {
-	basic.elementCore.classNames = append(basic.elementCore.classNames, additions...)
-	return basic
+func (el HTMLElementView) AddClasses(additions ClassNames) HTMLElementView {
+	el.elementCore.classNames = append(el.elementCore.classNames, additions...)
+	return el
 }
 
-func (basic HTMLElementView) ChangeClasses(changer func(classNames ClassNames) ClassNames) HTMLElementView {
-	basic.elementCore.classNames = changer(basic.elementCore.classNames)
-	return basic
+func (el HTMLElementView) ChangeClasses(changer func(classNames ClassNames) ClassNames) HTMLElementView {
+	el.elementCore.classNames = changer(el.elementCore.classNames)
+	return el
 }
 
-func (basic HTMLElementView) apply(node *html.Node) {
+func (el HTMLElementView) apply(node *html.Node) {
 	node.Type = html.ElementNode
-	node.Data = basic.tagName
-	node.DataAtom = basic.tagAtom
+	node.Data = el.tagName
+	node.DataAtom = el.tagAtom
 
-	basic.elementCore.applyToNode(node)
+	el.elementCore.applyToNode(node)
 }
 
 func HTMLElementViewOf(tagName string, tagAtom atom.Atom, children []HTMLView) HTMLElementView {
