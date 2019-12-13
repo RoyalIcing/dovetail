@@ -299,6 +299,10 @@ func Nav(children ...HTMLView) HTMLElementView {
 	return HTMLElementViewOf("nav", atom.Nav, children)
 }
 
+func P(children ...HTMLView) HTMLElementView {
+	return HTMLElementViewOf("p", atom.P, children)
+}
+
 func Link(url string, children ...HTMLView) HTMLElementView {
 	children = append(children, CustomAttr("href", url))
 
