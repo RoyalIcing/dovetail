@@ -2,6 +2,8 @@
 
 *CURRENTLY IN ALPHA, API WILL CHANGE*
 
+[Documentation]([![GoDoc](https://godoc.org/github.com/RoyalIcing/dovetail?status.svg)](https://godoc.org/github.com/RoyalIcing/dovetail))
+
 Friendly HTML Components for Go, inspired by SwiftUI, Elm, React.
 
 - Produce ARIA-compliant HTML markup easily.
