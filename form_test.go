@@ -42,10 +42,18 @@ func TestForm(t *testing.T) {
 	})
 
 	t.Run("Rendering Field with text input with class", func(t *testing.T) {
-		s := subjectAsString(FieldLabelled("Write description", TextInput("description").Use(Class("some classes"))))
+		s := subjectAsString(FieldLabelled("Write description", TextInput("description").DefaultValue("some value").Use(Class("some classes"))))
 
 		t.Run(`it renders <label> with child <span> with label text and <input> with type and name attibutes`, func(t *testing.T) {
-			assert.Equal(t, s, `<label><span>Write description</span><input type="text" name="description" class="some classes"/></label>`)
+			assert.Equal(t, s, `<label><span>Write description</span><input type="text" name="description" value="some value" class="some classes"/></label>`)
+		})
+	})
+
+	t.Run("Rendering Field with text input with 3 rows", func(t *testing.T) {
+		s := subjectAsString(FieldLabelled("Favorite number", TextInput("description").Rows(3).DefaultValue("some value")))
+
+		t.Run(`it renders <label> with child <span> with label text and <textarea> with name and rows attibutes`, func(t *testing.T) {
+			assert.Equal(t, s, `<label><span>Favorite number</span><textarea name="description" rows="3">some value</textarea></label>`)
 		})
 	})
 

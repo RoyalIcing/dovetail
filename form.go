@@ -1,6 +1,8 @@
 package dovetail
 
 import (
+	"strconv"
+
 	"golang.org/x/net/html"
 	"golang.org/x/net/html/atom"
 )
@@ -53,44 +55,39 @@ func (form FormHTMLView) apply(node *html.Node) {
 	form.elementCore.applyToNode(node)
 }
 
+type FieldInputProps struct {
+	name         string
+	inputType    string
+	defaultValue string
+	rows         int
+	core         HTMLElementCore
+}
+
 type FieldHTMLView struct {
-	formName       string
-	inputType      string
+	inputProps     FieldInputProps
 	labelInnerView HTMLView
 	labelCore      HTMLElementCore
 	inputCore      HTMLElementCore
 }
 
-type FieldOption func(FieldHTMLView) FieldHTMLView
-
-func (option FieldOption) Use(enhancers ...HTMLEnhancer) FieldOption {
-	return func(field FieldHTMLView) FieldHTMLView {
-		field = option(field)
-		field.inputCore = field.inputCore.Use(enhancers...)
-		return field
-	}
-}
-
-func (option FieldOption) setType(inputType string) FieldOption {
-	return func(field FieldHTMLView) FieldHTMLView {
-		field = option(field)
-		field.inputType = inputType
-		return field
-	}
+type FieldOption interface {
+	applyToField(field FieldHTMLView) FieldHTMLView
 }
 
 func FieldLabelled(labelText string, option FieldOption, children ...HTMLEnhancer) FieldHTMLView {
 	field := FieldHTMLView{labelInnerView: Text(labelText)}
-	field = option(field)
+	field = option.applyToField(field)
 	for _, child := range children {
 		field.labelCore.children = append(field.labelCore.children, child)
 	}
 	return field
 }
 
-func inputNamed(inputName string, options ...FieldOption) FieldOption {
+type FieldTextInputOption func(FieldHTMLView) FieldHTMLView
+
+func TextInput(inputName string, options ...FieldTextInputOption) FieldTextInputOption {
 	return func(field FieldHTMLView) FieldHTMLView {
-		field.formName = inputName
+		field.inputProps.name = inputName
 		for _, option := range options {
 			field = option(field)
 		}
@@ -98,21 +95,82 @@ func inputNamed(inputName string, options ...FieldOption) FieldOption {
 	}
 }
 
-func TextInput(inputName string, options ...FieldOption) FieldOption {
-	return inputNamed(inputName, options...).setType("text")
+func (option FieldTextInputOption) Use(enhancers ...HTMLEnhancer) FieldTextInputOption {
+	return func(field FieldHTMLView) FieldHTMLView {
+		field = option(field)
+		field.inputProps.core = field.inputProps.core.Use(enhancers...)
+		return field
+	}
 }
 
-func FileInput(inputName string, options ...FieldOption) FieldOption {
-	return inputNamed(inputName, options...).setType("file")
+func (option FieldTextInputOption) Rows(rows int) FieldTextInputOption {
+	return func(field FieldHTMLView) FieldHTMLView {
+		field = option(field)
+		field.inputProps.rows = rows
+		return field
+	}
 }
 
-func NumberInput(inputName string, options ...FieldOption) FieldOption {
-	return inputNamed(inputName, options...).setType("number")
+func (option FieldTextInputOption) DefaultValue(value string) FieldTextInputOption {
+	return func(field FieldHTMLView) FieldHTMLView {
+		field = option(field)
+		field.inputProps.defaultValue = value
+		return field
+	}
 }
 
-func (field FieldHTMLView) setType(inputType string) FieldHTMLView {
-	field.inputType = inputType
-	return field
+func (option FieldTextInputOption) applyToField(field FieldHTMLView) FieldHTMLView {
+	return option(field)
+}
+
+type FieldFileInputOption func(FieldHTMLView) FieldHTMLView
+
+func FileInput(inputName string, options ...FieldFileInputOption) FieldFileInputOption {
+	return func(field FieldHTMLView) FieldHTMLView {
+		field.inputProps.inputType = "file"
+		field.inputProps.name = inputName
+		for _, option := range options {
+			field = option(field)
+		}
+		return field
+	}
+}
+
+func (option FieldFileInputOption) Use(enhancers ...HTMLEnhancer) FieldFileInputOption {
+	return func(field FieldHTMLView) FieldHTMLView {
+		field = option(field)
+		field.inputProps.core = field.inputProps.core.Use(enhancers...)
+		return field
+	}
+}
+
+func (option FieldFileInputOption) applyToField(field FieldHTMLView) FieldHTMLView {
+	return option(field)
+}
+
+type FieldNumberInputOption func(FieldHTMLView) FieldHTMLView
+
+func NumberInput(inputName string, options ...FieldNumberInputOption) FieldNumberInputOption {
+	return func(field FieldHTMLView) FieldHTMLView {
+		field.inputProps.inputType = "number"
+		field.inputProps.name = inputName
+		for _, option := range options {
+			field = option(field)
+		}
+		return field
+	}
+}
+
+func (option FieldNumberInputOption) Use(enhancers ...HTMLEnhancer) FieldNumberInputOption {
+	return func(field FieldHTMLView) FieldHTMLView {
+		field = option(field)
+		field.inputProps.core = field.inputProps.core.Use(enhancers...)
+		return field
+	}
+}
+
+func (option FieldNumberInputOption) applyToField(field FieldHTMLView) FieldHTMLView {
+	return option(field)
 }
 
 func (field FieldHTMLView) Class(className string) FieldHTMLView {
@@ -121,16 +179,37 @@ func (field FieldHTMLView) Class(className string) FieldHTMLView {
 }
 
 func (field FieldHTMLView) apply(node *html.Node) {
-	inputType := field.inputType
+	inputType := field.inputProps.inputType
 	if inputType == "" {
 		inputType = "text"
 	}
 
-	inputEl := &html.Node{
-		Type:     html.ElementNode,
-		Data:     "input",
-		DataAtom: atom.Input,
-		Attr:     []html.Attribute{{Key: "type", Val: inputType}, {Key: "name", Val: field.formName}},
+	var inputEl *html.Node
+	if field.inputProps.rows > 0 {
+		inputEl = &html.Node{
+			Type:     html.ElementNode,
+			Data:     "textarea",
+			DataAtom: atom.Textarea,
+			Attr:     []html.Attribute{{Key: "name", Val: field.inputProps.name}, {Key: "rows", Val: strconv.Itoa(field.inputProps.rows)}},
+		}
+
+		if field.inputProps.defaultValue != "" {
+			inputEl.AppendChild(&html.Node{
+				Type: html.TextNode,
+				Data: field.inputProps.defaultValue,
+			})
+		}
+	} else {
+		inputEl = &html.Node{
+			Type:     html.ElementNode,
+			Data:     "input",
+			DataAtom: atom.Input,
+			Attr:     []html.Attribute{{Key: "type", Val: inputType}, {Key: "name", Val: field.inputProps.name}},
+		}
+
+		if field.inputProps.defaultValue != "" {
+			inputEl.Attr = append(inputEl.Attr, html.Attribute{Key: "value", Val: field.inputProps.defaultValue})
+		}
 	}
 
 	spanEl := &html.Node{
@@ -146,7 +225,7 @@ func (field FieldHTMLView) apply(node *html.Node) {
 
 	node.AppendChild(spanEl)
 
-	field.inputCore.applyToNode(inputEl)
+	field.inputProps.core.applyToNode(inputEl)
 	node.AppendChild(inputEl)
 
 	field.labelCore.applyToNode(node)
