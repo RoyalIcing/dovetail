@@ -250,6 +250,8 @@ func Section(children ...HTMLView) HTMLElementView {
 	return HTMLElementViewOf("section", atom.Section, children)
 }
 
+// TODO: Add SectionLabelled()
+
 func Article(children ...HTMLView) HTMLElementView {
 	return HTMLElementViewOf("article", atom.Article, children)
 }
@@ -303,6 +305,8 @@ func List(children ...HTMLView) HTMLElementView {
 func Nav(children ...HTMLView) HTMLElementView {
 	return HTMLElementViewOf("nav", atom.Nav, children)
 }
+
+// TODO: Add NavLabelled()
 
 func P(children ...HTMLView) HTMLElementView {
 	return HTMLElementViewOf("p", atom.P, children)
@@ -369,6 +373,18 @@ func (view HTMLClassNameView) apply(node *html.Node) {
 }
 
 func (HTMLClassNameView) enhances() bool { return true }
+
+// ConcatClassNames appends the ClassNames specified
+func (view HTMLClassNameView) ConcatClassNames(additions ClassNames) HTMLClassNameView {
+	view.classNames = view.classNames.Concat(additions)
+	return view
+}
+
+// Concat appends the classes from the HTMLClassNameView specified
+func (view HTMLClassNameView) Concat(other HTMLClassNameView) HTMLClassNameView {
+	view.classNames = view.classNames.Concat(other.classNames)
+	return view
+}
 
 // ClassName adds a class name
 func ClassName(classNames ...string) HTMLClassNameView {
