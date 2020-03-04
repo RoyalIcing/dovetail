@@ -203,6 +203,13 @@ func (el HTMLElementView) Use(enhancers ...HTMLEnhancer) HTMLElementView {
 	return el
 }
 
+func (el HTMLElementView) UseWhen(when bool, enhancers ...HTMLEnhancer) HTMLElementView {
+	if when {
+		el.elementCore = el.elementCore.Use(enhancers...)
+	}
+	return el
+}
+
 func (el HTMLElementView) Class(classNames ...string) HTMLElementView {
 	el.elementCore.classNames = append(el.elementCore.classNames, classNames...)
 	return el
