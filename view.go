@@ -351,6 +351,14 @@ func Noscript(children ...HTMLView) HTMLElementView {
 	return HTMLElementViewOf("noscript", atom.Noscript, children)
 }
 
+func When(when bool, child HTMLView) HTMLView {
+	if when {
+		return child
+	}
+
+	return Noscript()
+}
+
 //
 
 // HTMLAttrView allows setting HTML attributes
