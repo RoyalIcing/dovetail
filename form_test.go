@@ -81,9 +81,9 @@ func TestForm(t *testing.T) {
 					FileInput("image"),
 					Class("block"),
 				),
-				Button(Text("Upload")).Submit(),
-				// Button("Upload", Submit),
-				// Button(Submit, Text("Upload")),
+				ButtonOld(Text("Upload")).Submit(),
+				// ButtonOld("Upload", Submit),
+				// ButtonOld(Submit, Text("Upload")),
 				// SubmitButton("Upload"),
 			),
 		)

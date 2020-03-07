@@ -71,7 +71,7 @@ func TestRender(t *testing.T) {
 		s := subjectAsString(
 			Ul(
 				Li(Link("/about", Text("About"))),
-				Li(Button(Text("Sign Out"))),
+				Li(ButtonOld(Text("Sign Out"))),
 			),
 		)
 
@@ -84,7 +84,7 @@ func TestRender(t *testing.T) {
 		s := subjectAsString(
 			List(
 				Link("/about", Text("About")),
-				Button(Text("Sign Out")),
+				ButtonOld(Text("Sign Out")),
 			),
 		)
 
@@ -149,8 +149,8 @@ func TestRender(t *testing.T) {
 	// 	})
 	// })
 
-	t.Run(`Rendering Button(Text("Click me"))`, func(t *testing.T) {
-		s := subjectAsString(Button(Text("Click me")))
+	t.Run(`Rendering ButtonOld(Text("Click me"))`, func(t *testing.T) {
+		s := subjectAsString(ButtonOld(Text("Click me")))
 
 		t.Run(`it renders <button> with text "Click me"`, func(t *testing.T) {
 			assert.Equal(t, s, `<button type="button">Click me</button>`)
@@ -158,7 +158,7 @@ func TestRender(t *testing.T) {
 	})
 
 	t.Run(`Rendering Button with Submit`, func(t *testing.T) {
-		s := subjectAsString(Button(Text("Click me")).Submit())
+		s := subjectAsString(ButtonOld(Text("Click me")).Submit())
 
 		t.Run(`it renders <button> with text "Click me"`, func(t *testing.T) {
 			assert.Equal(t, s, `<button type="submit">Click me</button>`)
@@ -166,7 +166,7 @@ func TestRender(t *testing.T) {
 	})
 
 	t.Run(`Rendering Div with two buttons`, func(t *testing.T) {
-		s := subjectAsString(Div(Button(Text("First")), Button(Text("Second"))))
+		s := subjectAsString(Div(ButtonOld(Text("First")), ButtonOld(Text("Second"))))
 
 		t.Run(`it renders <div> with two buttons`, func(t *testing.T) {
 			assert.Equal(t, s, `<div><button type="button">First</button><button type="button">Second</button></div>`)
@@ -174,7 +174,7 @@ func TestRender(t *testing.T) {
 	})
 
 	t.Run(`Rendering Header with two buttons`, func(t *testing.T) {
-		s := subjectAsString(Header(Button(Text("First")), Button(Text("Second"))))
+		s := subjectAsString(Header(ButtonOld(Text("First")), ButtonOld(Text("Second"))))
 
 		t.Run(`it renders <header> with two buttons`, func(t *testing.T) {
 			assert.Equal(t, s, `<header><button type="button">First</button><button type="button">Second</button></header>`)
@@ -314,7 +314,7 @@ func BenchmarkViewButton(b *testing.B) {
 
 	for n := 0; n < b.N; n++ {
 		buf.Reset()
-		Render(buf, Button(Text("Click me")))
+		Render(buf, ButtonOld(Text("Click me")))
 	}
 
 	result = buf
@@ -325,7 +325,7 @@ func BenchmarkViewButtonSubmit(b *testing.B) {
 
 	for n := 0; n < b.N; n++ {
 		buf.Reset()
-		Render(buf, Button(Text("Click me")).Submit())
+		Render(buf, ButtonOld(Text("Click me")).Submit())
 	}
 
 	result = buf

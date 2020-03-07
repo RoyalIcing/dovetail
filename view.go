@@ -151,7 +151,7 @@ type ButtonView struct {
 	elementCore HTMLElementCore
 }
 
-func Button(children ...HTMLView) ButtonView {
+func ButtonOld(children ...HTMLView) ButtonView {
 	return ButtonView{elementCore: HTMLElementCore{children: children}}
 }
 
@@ -162,7 +162,7 @@ func ButtonSubmit(input ButtonView) ButtonView {
 
 func SpecialButton(options ...func(input ButtonView) ButtonView) func(children ...HTMLView) ButtonView {
 	return func(children ...HTMLView) ButtonView {
-		button := Button(children...)
+		button := ButtonOld(children...)
 		for _, option := range options {
 			button = option(button)
 		}
