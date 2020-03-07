@@ -325,6 +325,18 @@ func Link(url string, children ...HTMLView) HTMLElementView {
 	return HTMLElementViewOf("a", atom.A, children)
 }
 
+func Button(children ...HTMLView) HTMLElementView {
+	children = append(children, CustomAttr("type", "button"))
+
+	return HTMLElementViewOf("button", atom.Button, children)
+}
+
+func SubmitButton(children ...HTMLView) HTMLElementView {
+	children = append(children, CustomAttr("type", "submit"))
+
+	return HTMLElementViewOf("button", atom.Button, children)
+}
+
 func Img(srcURL string, alt string, enhancers ...HTMLEnhancer) HTMLElementView {
 	view := HTMLElementViewOf("img", atom.Img, []HTMLView{CustomAttr("src", srcURL), CustomAttr("alt", alt)})
 	view.elementCore = view.elementCore.Use(enhancers...)
