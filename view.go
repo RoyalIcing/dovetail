@@ -347,6 +347,10 @@ func TextWith(text string, enhancers ...HTMLEnhancer) HTMLElementView {
 	return HTMLElementViewOf("span", atom.Span, []HTMLView{Text(text)}).Use(enhancers...)
 }
 
+func Noscript(children ...HTMLView) HTMLElementView {
+	return HTMLElementViewOf("noscript", atom.Noscript, children)
+}
+
 //
 
 // HTMLAttrView allows setting HTML attributes
