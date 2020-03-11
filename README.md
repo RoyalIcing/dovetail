@@ -43,25 +43,26 @@ Type: `HTMLElementView`
 
 ### Landmarks
 
-- `Main(children ...HTMLView)` — `<main>`  
-- `Nav(children ...HTMLView)` — `<nav>`
-- `Header(children ...HTMLView)` — `<header>`
-- `Footer(children ...HTMLView)` — `<footer>`
-- `Section(children ...HTMLView)` — `<section>`
-- `Article(children ...HTMLView)` — `<article>`
-- `Aside(children ...HTMLView)` — `<aside>`
+- `Main(children ...HTMLView)` — [`<main>`](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/main)
+- `Nav(children ...HTMLView)` — [`<nav>`](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/nav)
+- `Header(children ...HTMLView)` — [`<header>`](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/header)
+- `Footer(children ...HTMLView)` — [`<footer>`](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/footer)
+- `Section(children ...HTMLView)` — [`<section>`](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/section)
+- `Article(children ...HTMLView)` — [`<article>`](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/article)
+- `Aside(children ...HTMLView)` — [`<aside>`](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/aside)
 
 ### Structure
 
-- `Div(children ...HTMLView)` — `<div>`
+- `Div(children ...HTMLView)` — [`<div>`](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/div)
 - `List(children ...HTMLView)` — `<ul><li>{ children[0] }</li>…<li>{ children[n] }</li></ul>`
-- `Ul(children ...HTMLView)` — `<ul>`
-- `Li(children ...HTMLView)` — `<li>`
+- `Ul(children ...HTMLView)` — [`<ul>`](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/ul)
+- `Li(children ...HTMLView)` — [`<li>`](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/li)
+- Coming soon: `<ol>`, `<dl>`
 
 ### Elements
 
-- `Link(url string, children ...HTMLView)` — `<a href="{ url }">{ children }</a>`
-- `Button(children ...HTMLView)` — `<button type="button">{ children }</button>`
+- `Link(url string, children ...HTMLView)` — [`<a href="{ url }">{ children }</a>`](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/a)
+- `Button(children ...HTMLView)` — [`<button type="button">{ children }</button>`](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/button)
 - `Img(srcUrl string, alt string, enhancers ...HTMLEnhancer)` — `<img src="{ srcUrl }" alt="{ alt }" {...enhancers}>`
 - `P(children ...HTMLView)` — `<p>`
 - `TextWith(text string, enhancers ...HTMLEnhancer)` — `<span {...enhancers}>{ text }</span>`
@@ -69,13 +70,13 @@ Type: `HTMLElementView`
 
 ### Forms
 
-- `FormTo(action string, options ...func(form FormHTMLView) FormHTMLView)` — `<form>`
-  - `Multipart(form FormHTMLView) FormHTMLView` — `<form enctype="multipart/form-data">`
-- `SubmitButton(children ...HTMLView)` — `<button type="submit">{ children }</button>`
+- `FormTo(action string, options ...func(form FormHTMLView) FormHTMLView)` — [`<form>`](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/form)
+  - `Multipart(form FormHTMLView) FormHTMLView` — [`<form enctype="multipart/form-data">`](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/form#attr-enctype)
+- `SubmitButton(children ...HTMLView)` — [`<button type="submit">{ children }</button>`](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/button#attr-type)
 
 ### Text nodes
 
-- `Text(text string)` — HTML text node
+- `Text(text string)` — [HTML text node](https://developer.mozilla.org/en-US/docs/Web/API/Text)
 
 ### Logic
 
@@ -87,10 +88,10 @@ Type: `HTMLElementView`
 
 ## Attributes
 
-- `AriaAttr` — `aria-*`
-- `AriaLabel` — `aria-label`
-- `CustomAttr` — custom attributes
-- `DataAttr` — `data-*` attributes
+- `AriaAttr` — [`aria-*`](https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/ARIA_Techniques#States_and_properties)
+- `AriaLabel` — [`aria-label`](https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/ARIA_Techniques/Using_the_aria-label_attribute)
+- `CustomAttr` — custom HTML attributes
+- `DataAttr` — [`data-*` attributes](https://developer.mozilla.org/en-US/docs/Web/HTML/Global_attributes/data-*)
 
 ## Define components
 
