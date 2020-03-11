@@ -30,7 +30,7 @@ Render(
     Main(
       Article(
         H(1, Text("Welcome")),
-        Markdown(content),
+        P("Render HTML using components with Go"),
       ),
     ),
   )
