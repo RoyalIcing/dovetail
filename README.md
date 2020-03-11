@@ -1,15 +1,15 @@
 # Dovetail
 
-*CURRENTLY IN ALPHA, API WILL CHANGE*
+_CURRENTLY IN ALPHA, API WILL CHANGE_
 
 [Documentation](https://godoc.org/github.com/RoyalIcing/dovetail)
 
-Friendly HTML Components for Go, inspired by SwiftUI, Elm, React.
+User- and developer-friendly HTML Components for Go, inspired by SwiftUI/React/Elm.
 
-- Produce ARIA-compliant HTML markup easily.
-- Create components using functions.
+- Produce accessible HTML markup easily.
+- Make components with functions.
 - Supports ARIA and data attributes.
-- Conveniently wrap elements in `<ul>` & `<li>` with `List()`
+- Conveniences for forms and lists.
 
 ```go
 Render(
@@ -31,6 +31,10 @@ Render(
       Article(
         H(1, Text("Welcome")),
         P("Render HTML using components with Go"),
+      ),
+      FormTo("/newsletter").With(
+        FieldLabelled("Email", TextInput("email")),
+        SubmitButton(Text("Sign up for the newsletter")),
       ),
     ),
   )
@@ -101,14 +105,6 @@ Components are defined using functions. These functions can take any number of a
 func PrimaryButton(text string) View {
 	return Button(Text(text)).Class("btn btn-primary")
 }
-```
-
-## Tailwind
-
-Dovetail has native support for [Tailwind](https://tailwindcss.com/) classes
-
-```go
-Div().AddClasses(Tailwind(Pt8, Pb8, Text2XL, FontBold))
 ```
 
 ## Performance
