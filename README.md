@@ -2,7 +2,7 @@
 
 *CURRENTLY IN ALPHA, API WILL CHANGE*
 
-[Documentation]([![GoDoc](https://godoc.org/github.com/RoyalIcing/dovetail?status.svg)](https://godoc.org/github.com/RoyalIcing/dovetail))
+[Documentation](https://godoc.org/github.com/RoyalIcing/dovetail)
 
 Friendly HTML Components for Go, inspired by SwiftUI, Elm, React.
 
@@ -37,6 +37,61 @@ Render(
 )
 ```
 
+## Provided components
+
+Type: `HTMLElementView`
+
+### Landmarks
+
+- `Main(children ...HTMLView)` — `<main>`  
+- `Nav(children ...HTMLView)` — `<nav>`
+- `Header(children ...HTMLView)` — `<header>`
+- `Footer(children ...HTMLView)` — `<footer>`
+- `Section(children ...HTMLView)` — `<section>`
+- `Article(children ...HTMLView)` — `<article>`
+- `Aside(children ...HTMLView)` — `<aside>`
+
+### Structure
+
+- `Div(children ...HTMLView)` — `<div>`
+- `List(children ...HTMLView)` — `<ul><li>{ children[0] }</li>…<li>{ children[n] }</li></ul>`
+- `Ul(children ...HTMLView)` — `<ul>`
+- `Li(children ...HTMLView)` — `<li>`
+
+### Elements
+
+- `Link(url string, children ...HTMLView)` — `<a href="{ url }">{ children }</a>`
+- `Button(children ...HTMLView)` — `<button type="button">{ children }</button>`
+- `Img(srcUrl string, alt string, enhancers ...HTMLEnhancer)` — `<img src="{ srcUrl }" alt="{ alt }" {...enhancers}>`
+- `P(children ...HTMLView)` — `<p>`
+- `TextWith(text string, enhancers ...HTMLEnhancer)` — `<span {...enhancers}>{ text }</span>`
+- `Noscript(children ...HTMLView)` — `<noscript>{ children }</noscript>`
+
+### Forms
+
+- `FormTo(action string, options ...func(form FormHTMLView) FormHTMLView)` — `<form>`
+  - `Multipart(form FormHTMLView) FormHTMLView` — `<form enctype="multipart/form-data">`
+- `SubmitButton(children ...HTMLView)` — `<button type="submit">{ children }</button>`
+
+### Text nodes
+
+- `Text(text string)` — HTML text node
+
+### Logic
+
+- `When(when bool, view HTMLView)` — renders the provided `view` only if `when` is `true`
+
+### Custom
+
+- `HTMLElementViewOf(tagName string, tagAtom atom.Atom, children []HTMLView)` — custom html element
+
+## Attributes
+
+- `AriaAttr` — `aria-*`
+- `AriaLabel` — `aria-label`
+- `CustomAttr` — custom attributes
+- `DataAttr` — `data-*` attributes
+
 ## Define components
 
 Components are defined using functions. These functions can take any number of arguments, and return a composite of other components.
@@ -59,7 +114,7 @@ Div().AddClasses(Tailwind(Pt8, Pb8, Text2XL, FontBold))
 
 While not trying to be the fastest HTML producer possible, Dovetail aims to be faster than `html/template` to parse and execute.
 
-Run `make test_bench` to see how Dovetail performs to produce a variety of HTML components:
+Run `make test_bench` to see how Dovetail performs to produce a variety of HTML components. Here are results on a 2016 15″ MacBook Pro:
 
 ```
 go test -p 1 -timeout 30s -bench="Bench" -benchmem -v -run "Bench" ./...
@@ -96,4 +151,4 @@ ok  	github.com/RoyalIcing/dovetail	39.216s
 
 Because I want to create server-rendered web apps that I can host cheaply on GCP App Engine Standard.
 
-I want something that is both user friendly (quick to load, accessible) while also being reasonably developer friendly.
+I want something that is both user friendly (quick to load, accessible) while also being developer friendly.
