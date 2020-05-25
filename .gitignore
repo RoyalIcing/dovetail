@@ -14,3 +14,5 @@
 tmp/
 
 wasm/build/
+
+.DS_Store
