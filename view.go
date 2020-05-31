@@ -393,6 +393,11 @@ func CustomAttr(key string, value string) HTMLAttrView {
 	return HTMLAttrView{Key: key, Value: value}
 }
 
+// AriaHidden removes the element from the accessibility tree, hiding from screen readers
+func AriaHidden() HTMLAttrView {
+	return HTMLAttrView{Key: "aria-hidden", Value: "true"}
+}
+
 // HTMLClassNameView allows adding to the class attribute
 type HTMLClassNameView struct {
 	classNames ClassNames
