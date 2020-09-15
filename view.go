@@ -351,6 +351,7 @@ func Noscript(children ...HTMLView) HTMLElementView {
 	return HTMLElementViewOf("noscript", atom.Noscript, children)
 }
 
+// When conditionally renders the first argument when the second argument is true
 func When(when bool, child HTMLView) HTMLView {
 	if when {
 		return child
@@ -360,6 +361,22 @@ func When(when bool, child HTMLView) HTMLView {
 }
 
 //
+
+type combinedView struct {
+	views []HTMLView
+}
+
+func (combined combinedView) apply(node *html.Node) {
+	for _, view := range combined.views {
+		view.apply(node)
+	}
+}
+
+func (combinedView) enhances() bool { return true }
+
+func Combine(views ...HTMLView) HTMLView {
+	return combinedView{views: views}
+}
 
 // HTMLAttrView allows setting HTML attributes
 type HTMLAttrView struct {
