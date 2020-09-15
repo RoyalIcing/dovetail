@@ -1,7 +1,13 @@
 GO111MODULE = off
 
+ifeq ($(OS),Windows_NT)
+	GO := C:\Go\bin\go
+else
+	GO := go
+endif
+
 ci_test:
-	go test -p 1 -timeout 30s -v ./...
+	$(GO) test -p 1 -timeout 30s -v ./...
 
 TMP_PATH = "$(abspath ./tmp)"
 
@@ -10,13 +16,13 @@ tmp:
 
 tmp/gotest: tmp
 	@export GO111MODULE=off
-	@cd $(TMP_PATH) && go get github.com/rakyll/gotest && go build github.com/rakyll/gotest
+	@cd $(TMP_PATH) && $(GO) get github.com/rakyll/gotest && $(GO) build github.com/rakyll/gotest
 
 test: tmp/gotest
 	./tmp/gotest -p 1 -timeout 30s -v -run "${PATTERN}" ./...
 
 test_bench:
-	go test -p 1 -timeout 30s -bench="${PATTERN}" -benchmem -v -run "Benchmark" ./...
+	$(GO) test -p 1 -timeout 30s -bench="${PATTERN}" -benchmem -v -run "Benchmark" ./...
 
 test_watch_receiver:
 	-make test
