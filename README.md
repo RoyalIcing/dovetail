@@ -21,7 +21,7 @@ Render(
         List(
           Link("/", Text("Home")),
           Link("/about", Text("About")),
-          Link("/pricing", Text("Pricing")).Use(AriaAttr("current", "page")),
+          Link("/pricing", Text("Pricing"), AriaCurrentPage),
           Link("/sign-in", Text("Sign In")),
           Link("/join", Text("Join")),
         ),

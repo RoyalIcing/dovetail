@@ -16,7 +16,7 @@ func TestRender(t *testing.T) {
 					List(
 						Link("/", Text("Home")),
 						Link("/about", Text("About")),
-						Link("/pricing", Text("Pricing")),
+						Link("/pricing", Text("Pricing"), AriaCurrentPage),
 						Link("/sign-in", Text("Sign In")),
 						Link("/join", Text("Join")),
 					),
@@ -31,7 +31,7 @@ func TestRender(t *testing.T) {
 		))
 
 		t.Run(`it renders`, func(t *testing.T) {
-			assert.Equal(t, s, `<div><header><nav aria-label="Primary"><ul><li><a href="/">Home</a></li><li><a href="/about">About</a></li><li><a href="/pricing">Pricing</a></li><li><a href="/sign-in">Sign In</a></li><li><a href="/join">Join</a></li></ul></nav></header><main><article><h1>Welcome</h1><div>markdown</div></article></main></div>`)
+			assert.Equal(t, s, `<div><header><nav aria-label="Primary"><ul><li><a href="/">Home</a></li><li><a href="/about">About</a></li><li><a href="/pricing" aria-current="page">Pricing</a></li><li><a href="/sign-in">Sign In</a></li><li><a href="/join">Join</a></li></ul></nav></header><main><article><h1>Welcome</h1><div>markdown</div></article></main></div>`)
 		})
 	})
 

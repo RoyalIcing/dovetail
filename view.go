@@ -320,7 +320,8 @@ func P(children ...HTMLView) HTMLElementView {
 }
 
 func Link(url string, children ...HTMLView) HTMLElementView {
-	children = append(children, CustomAttr("href", url))
+	// Prepend href so it’s first
+	children = append([]HTMLView{CustomAttr("href", url)}, children...)
 
 	return HTMLElementViewOf("a", atom.A, children)
 }
@@ -390,9 +391,22 @@ func (attrView HTMLAttrView) apply(node *html.Node) {
 
 func (HTMLAttrView) enhances() bool { return true }
 
+// FocusViaScript allows a script to focus this element. It sets the tabindex to -1
+var FocusViaScript = HTMLAttrView{Key: "tabindex", Value: "-1"}
+
+// FocusViaTab allows the user to focus this element with the tab key. It sets the tabindex to 0
+var FocusViaTab = HTMLAttrView{Key: "tabindex", Value: "0"}
+
+var AriaCurrentPage = HTMLAttrView{Key: "aria-current", Value: "page"}
+
 // AriaAttr is for aria attributes such as aria-label or aria-current
 func AriaAttr(key string, value string) HTMLAttrView {
 	return HTMLAttrView{Key: "aria-" + key, Value: value}
+}
+
+// AriaHidden removes the element from the accessibility tree, hiding from screen readers
+func AriaHidden() HTMLAttrView {
+	return HTMLAttrView{Key: "aria-hidden", Value: "true"}
 }
 
 // AriaLabel sets the aria-label attribute
@@ -408,11 +422,6 @@ func DataAttr(key string, value string) HTMLAttrView {
 // CustomAttr is for data attributes such as href or src
 func CustomAttr(key string, value string) HTMLAttrView {
 	return HTMLAttrView{Key: key, Value: value}
-}
-
-// AriaHidden removes the element from the accessibility tree, hiding from screen readers
-func AriaHidden() HTMLAttrView {
-	return HTMLAttrView{Key: "aria-hidden", Value: "true"}
 }
 
 // HTMLClassNameView allows adding to the class attribute
