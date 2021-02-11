@@ -85,7 +85,7 @@ func FieldLabelled(labelText string, option FieldOption, children ...HTMLEnhance
 
 type FieldTextInputOption func(FieldHTMLView) FieldHTMLView
 
-func TextInput(inputName string, options ...FieldTextInputOption) FieldTextInputOption {
+func Textbox(inputName string, options ...FieldTextInputOption) FieldTextInputOption {
 	return func(field FieldHTMLView) FieldHTMLView {
 		field.inputProps.name = inputName
 		for _, option := range options {
