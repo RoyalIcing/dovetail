@@ -33,7 +33,7 @@ Render(
         P("Render HTML using components with Go"),
       ),
       FormTo("/newsletter").With(
-        FieldLabelled("Email", TextInput("email")),
+        FieldLabelled("Email", Textbox("email")),
         SubmitButton(Text("Sign up for the newsletter")),
       ),
     ),
@@ -76,6 +76,7 @@ Type: `HTMLElementView`
 
 - `FormTo(action string, options ...func(form FormHTMLView) FormHTMLView)` — [`<form>`](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/form)
   - `Multipart(form FormHTMLView) FormHTMLView` — [`<form enctype="multipart/form-data">`](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/form#attr-enctype)
+- `Textbox(inputName string, options ...FieldTextInputOption)` — [`<input type="text">`](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input/text)
 - `SubmitButton(children ...HTMLView)` — [`<button type="submit">{ children }</button>`](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/button#attr-type)
 
 ### Text nodes
